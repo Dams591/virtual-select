@@ -1403,6 +1403,7 @@ export class VirtualSelect {
 
     setTimeout(() => {
       DomUtils.addClass(this.$wrapper, 'opened');
+      this.dispatchEvent(this.$ele, 'opened');
 
       if (!isSilent) {
         this.moveSelectedOptionsFirst();
@@ -1440,6 +1441,7 @@ export class VirtualSelect {
 
     setTimeout(() => {
       DomUtils.addClass(this.$wrapper, 'closed');
+      this.dispatchEvent(this.$ele, 'closed');
     }, transitionDuration);
   }
 

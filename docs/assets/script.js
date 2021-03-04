@@ -104,6 +104,18 @@ function initPageGetStarted() {
     zIndex: config.zIndex,
   });
 
+  document
+    .querySelector('#single-select')
+    .addEventListener('opened', function () {
+      console.log('opened');
+    });
+
+  document
+    .querySelector('#single-select')
+    .addEventListener('closed', function () {
+      console.log('closed');
+    });
+
   VirtualSelect.init({
     ele: '#multiple-select',
     options: getOptions(),

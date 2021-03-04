@@ -12,6 +12,7 @@ As you can see in the below examples, each dropdown has 100000 options. But you 
 </div>
 
 ## Download files
+
 You can download the required CSS and JS files from the `dist` directory in the [GitHub repository](https://github.com/{{repo}})
 
 OR from below direct links
@@ -23,7 +24,6 @@ OR from below direct links
 [tooltip.min.css](https://raw.githubusercontent.com/{{repo}}/master/dist/tooltip.min.css)
 
 [tooltip.min.js](https://raw.githubusercontent.com/{{repo}}/master/dist/tooltip.min.js)
-
 
 ## Import files
 
@@ -37,6 +37,7 @@ Import downloaded files (`virtual-select.min.css` and `virtual-select.min.js`) i
 
 Import below files to enable optional tooltip plugin.\
 Tooltip would be used to show selected values and options text, if text is long and hidden by ellipsis.
+
 ```html
 <link rel="stylesheet" href="path/to/tooltip.min.css">
 
