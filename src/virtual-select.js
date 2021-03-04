@@ -1429,6 +1429,7 @@ export class VirtualSelect {
 
     setTimeout(() => {
       DomUtils.removeClass(this.$wrapper, 'opened focused');
+      this.dispatchEvent(this.$ele, 'closed');
       this.removeOptionFocus();
 
       if (!isSilent) {
@@ -1441,7 +1442,6 @@ export class VirtualSelect {
 
     setTimeout(() => {
       DomUtils.addClass(this.$wrapper, 'closed');
-      this.dispatchEvent(this.$ele, 'closed');
     }, transitionDuration);
   }
 
@@ -1929,7 +1929,7 @@ export class VirtualSelect {
 
   static closeAllDropbox($eleToKeepOpen) {
     document.querySelectorAll('.vscomp-wrapper').forEach(($ele) => {
-      if ($eleToKeepOpen && $eleToKeepOpen === $ele) {
+      if ($eleToKeepOpen && $eleToKeepOpen == $ele) {
         return;
       }
 
