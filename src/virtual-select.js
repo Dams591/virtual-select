@@ -589,6 +589,7 @@ export class VirtualSelect {
     this.popupDropboxBreakpoint = options.popupDropboxBreakpoint;
     this.onServerSearch = options.onServerSearch;
     this.searchPlaceholder = options.searchPlaceholder;
+    this.itemsSelectedMessage = options.itemsSelectedMessage;
 
     this.selectedValues = [];
     this.newValues = [];
@@ -656,6 +657,7 @@ export class VirtualSelect {
       showDropboxAsPopup: true,
       popupDropboxBreakpoint: '576px',
       searchPlaceholder: 'Search...',
+      itemsSelectedMessage: 'selected',
     };
 
     if (options.hasOptionDescription) {
@@ -991,7 +993,8 @@ export class VirtualSelect {
     let selectedValuesCount = 0;
 
     if (this.isAllSelected) {
-      this.$valueText.innerHTML = `All (${selectedLength})`;
+      //this.$valueText.innerHTML = `All (${selectedLength})`;
+      this.$valueText.innerHTML = `${selectedLength} ${this.itemsSelectedMessage}`;
     } else {
       for (let d of this.options) {
         if (d.isCurrentNew) {
@@ -1041,9 +1044,11 @@ export class VirtualSelect {
             }
 
             /** replace comma delimitted list of selections with shorter text indicating selection count */
-            this.$valueText.innerHTML = `${countText} option${
-              selectedLength === 1 ? '' : 's'
-            } selected`;
+            // this.$valueText.innerHTML = `${countText} option${
+            //   selectedLength === 1 ? '' : 's'
+            // } selected`;
+
+            this.$valueText.innerHTML = `${countText} ${this.itemsSelectedMessage}`;
           } else {
             /** removing tooltip if full value text is visible */
             valueTooltip = [];
