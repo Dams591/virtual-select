@@ -238,6 +238,10 @@ body.vscomp-popup-active {
 .vscomp-option-text {
   @include ellipse;
   width: 100%;
+
+  &.none {
+    opacity: 0.5;
+  }
 }
 
 .vscomp-option-description {
@@ -371,7 +375,9 @@ body.vscomp-popup-active {
     .vscomp-dropbox {
       position: relative;
       width: 80%;
-      max-height: calc(80% - #{$dropboxCloseButtonWidth + $dropboxCloseButtonOffset});
+      max-height: calc(
+        80% - #{$dropboxCloseButtonWidth + $dropboxCloseButtonOffset}
+      );
       max-width: 500px;
       margin-top: -#{($dropboxCloseButtonWidth + $dropboxCloseButtonOffset) / 2};
     }

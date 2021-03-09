@@ -99,7 +99,10 @@ function initPageGetStarted() {
   VirtualSelect.init({
     ele: '#single-select',
     options: getOptions(),
-    search: true,
+    //search: true,
+    keepAlwaysOpen: true,
+    allowNoneOption: true,
+    showSelectedOptionsFirst: true,
     placeholder: 'Select a single value',
     zIndex: config.zIndex,
   });
@@ -109,8 +112,6 @@ function initPageGetStarted() {
     options: getOptions(),
     multiple: true,
     placeholder: 'Select multiple values',
-    keepAlwaysOpen: true,
-    showSelectedOptionsFirst: true,
     zIndex: config.zIndex,
   });
 

@@ -3,6 +3,7 @@ import { Utils, DomUtils } from './utils';
 const virtualSelectVersion = 'v1.0.6';
 const dropboxCloseButtonFullHeight = 48;
 const searchHeight = 40;
+const noneOptionValue = '{#virtual-select-none-option#}';
 
 const keyDownMethodMapping = {
   13: 'onEnterPress',
@@ -59,6 +60,8 @@ export class VirtualSelect {
    * @property {string} [popupDropboxBreakpoint=576px] - Maximum screen width that allowed to show dropbox as popup
    * @property {function} [onServerSearch] - Callback function to integrate server search
    * @property {string} [searchPlaceholder=Search...] - Text to show inside search input
+   * @property {boolean} [allowNoneOption=false] - In single selection mode only and when keep always open is on: display a none option that clears the selection
+   * @property {string} [noneOptionText=None] - Text to be display if allowNone option is active
    */
   constructor(options) {
     try {
@@ -258,9 +261,15 @@ export class VirtualSelect {
         }
       }
 
-      html += `<div class="${optionClasses}" data-value="${d.value}" data-index="${d.index}" data-visible-index="${d.visibleIndex}" ${styleText}>
+      html += `<div class="${optionClasses}" data-value="${
+        d.value
+      }" data-index="${d.index}" data-visible-index="${
+        d.visibleIndex
+      }" ${styleText}>
           ${leftSection}
-          <span class="vscomp-option-text" ${optionTooltip}>
+          <span class="vscomp-option-text ${
+            d.value === noneOptionValue ? 'none' : ''
+          }" ${optionTooltip}>
             ${optionLabel}
           </span>
           ${description}
@@ -325,6 +334,7 @@ export class VirtualSelect {
     this.addEvent(this.$searchClear, 'click', 'onSearchClear');
     this.addEvent(this.$toggleAllButton, 'click', 'onToggleAllOptions');
   }
+
   /** render methods - end */
 
   /** dom event methods - start */
@@ -590,6 +600,8 @@ export class VirtualSelect {
     this.onServerSearch = options.onServerSearch;
     this.searchPlaceholder = options.searchPlaceholder;
     this.itemsSelectedMessage = options.itemsSelectedMessage;
+    this.allowNoneOption = options.allowNoneOption;
+    this.noneOptionText = options.noneOptionText;
 
     this.selectedValues = [];
     this.selectedIndexes = [];
@@ -659,6 +671,8 @@ export class VirtualSelect {
       popupDropboxBreakpoint: '576px',
       searchPlaceholder: 'Search...',
       itemsSelectedMessage: 'selected',
+      allowNoneOption: false,
+      noneOptionText: 'None',
     };
 
     if (options.hasOptionDescription) {
@@ -854,6 +868,14 @@ export class VirtualSelect {
         });
       }
     };
+
+    // Add none option
+    if (!this.multiple && this.allowNoneOption) {
+      options.unshift({
+        value: noneOptionValue,
+        label: this.noneOptionText,
+      });
+    }
 
     options.forEach(prepareOption);
 
@@ -1659,6 +1681,16 @@ export class VirtualSelect {
       this.beforeSelectNewValue();
     }
 
+    // 'None' clicked ? reset value.
+    if (
+      !this.multiple &&
+      this.allowNoneOption &&
+      selectedValue === noneOptionValue
+    ) {
+      this.reset();
+      return;
+    }
+
     this.setValue(selectedValues, selectedIndexes, true);
 
     // In 'List' only
@@ -1838,7 +1870,10 @@ export class VirtualSelect {
 
   sortOptions(options) {
     return options.sort((a, b) => {
-      if (!a.isSelected && !b.isSelected) {
+      if (b.value === noneOptionValue && a.value !== noneOptionValue) {
+        // None is always first
+        return 0;
+      } else if (!a.isSelected && !b.isSelected) {
         return 0;
       } else if (a.isSelected && (!b.isSelected || a.index < b.index)) {
         return -1;
