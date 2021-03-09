@@ -1660,6 +1660,15 @@ export class VirtualSelect {
     }
 
     this.setValue(selectedValues, selectedIndexes, true);
+
+    // In 'List' only
+    // immediately move item to top if options is on.
+    // Dropdown mode will wait until the next reopen to do so.
+    if (this.keepAlwaysOpen && this.showSelectedOptionsFirst) {
+      const lastScrollTop = this.$optionsContainer.scrollTop;
+      this.moveSelectedOptionsFirst();
+      this.$optionsContainer.scrollTop = lastScrollTop;
+    }
   }
 
   selectFocusedOption() {

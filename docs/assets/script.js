@@ -109,6 +109,8 @@ function initPageGetStarted() {
     options: getOptions(),
     multiple: true,
     placeholder: 'Select multiple values',
+    keepAlwaysOpen: true,
+    showSelectedOptionsFirst: true,
     zIndex: config.zIndex,
   });
 
