@@ -592,6 +592,7 @@ export class VirtualSelect {
     this.itemsSelectedMessage = options.itemsSelectedMessage;
 
     this.selectedValues = [];
+    this.selectedIndexes = [];
     this.newValues = [];
     this.events = {};
     this.tooltipEnterDelay = 200;
@@ -746,13 +747,15 @@ export class VirtualSelect {
     });
 
     let validValues = [];
+    let validIndexes = [];
 
-    this.options.forEach((d) => {
+    this.options.forEach((d, idx) => {
       let isSelected = value.indexOf(d.value) !== -1;
 
       if (isSelected && !d.isDisabled && !d.isGroupTitle) {
         d.isSelected = true;
         validValues.push(d.value);
+        validIndexes.push(idx);
       } else {
         d.isSelected = false;
       }
@@ -760,10 +763,11 @@ export class VirtualSelect {
 
     if (!this.multiple) {
       validValues = validValues[0];
+      validIndexes = validIndexes[0];
     }
 
     this.beforeValueSet();
-    this.setValue(validValues, !silentChange);
+    this.setValue(validValues, validIndexes, !silentChange);
     this.afterValueSet();
   }
 
@@ -948,7 +952,8 @@ export class VirtualSelect {
     });
   }
 
-  setValue(value, triggerEvent) {
+  setValue(value, index, triggerEvent) {
+    // Value
     if (!value) {
       this.selectedValues = [];
     } else if (Array.isArray(value)) {
@@ -960,8 +965,26 @@ export class VirtualSelect {
     let newValue = this.multiple
       ? this.selectedValues
       : this.selectedValues[0] || '';
+
     this.$ele.value = newValue;
     this.$hiddenInput.value = newValue;
+
+    // Index
+    if (!index) {
+      this.selectedIndexes = [];
+    } else if (Array.isArray(value)) {
+      this.selectedIndexes = [...index];
+    } else {
+      this.selectedIndexes = [index];
+    }
+
+    let newIndex = this.multiple
+      ? this.selectedIndexes
+      : this.selectedIndexes[0] || '';
+
+    this.$ele.index = newIndex;
+    this.$hiddenInput.index = newIndex;
+
     this.isMaxValuesSelected =
       this.maxValues && this.maxValues <= this.selectedValues.length
         ? true
@@ -1590,6 +1613,7 @@ export class VirtualSelect {
     }
 
     let selectedValues = this.selectedValues;
+    let selectedIndexes = this.selectedIndexes;
     let selectedValue = DomUtils.getData($ele, 'value');
     let selectedIndex = DomUtils.getData($ele, 'index');
 
@@ -1598,6 +1622,7 @@ export class VirtualSelect {
     if (isAdding) {
       if (this.multiple) {
         selectedValues.push(selectedValue);
+        selectedIndexes.push(selectedIndex);
         this.toggleAllOptionsClass();
       } else {
         if (selectedValues.length) {
@@ -1608,6 +1633,7 @@ export class VirtualSelect {
         }
 
         selectedValues = [selectedValue];
+        selectedIndexes = [selectedIndex];
         let $prevSelectedOption = this.$ele.querySelector(
           '.vscomp-option.selected'
         );
@@ -1624,6 +1650,7 @@ export class VirtualSelect {
       if (this.multiple) {
         DomUtils.toggleClass($ele, 'selected');
         Utils.removeItemFromArray(selectedValues, selectedValue);
+        Utils.removeItemFromArray(selectedIndexes, selectedIndex);
         this.toggleAllOptionsClass(false);
       }
     }
@@ -1632,7 +1659,7 @@ export class VirtualSelect {
       this.beforeSelectNewValue();
     }
 
-    this.setValue(selectedValues, true);
+    this.setValue(selectedValues, selectedIndexes, true);
   }
 
   selectFocusedOption() {
@@ -1651,8 +1678,9 @@ export class VirtualSelect {
     }
 
     let selectedValues = [];
+    let selectedIndexes = [];
 
-    this.options.forEach((d) => {
+    this.options.forEach((d, idx) => {
       if (d.isDisabled || d.isCurrentNew || d.isGroupTitle) {
         return;
       }
@@ -1661,11 +1689,12 @@ export class VirtualSelect {
 
       if (isSelected) {
         selectedValues.push(d.value);
+        selectedIndexes.push(idx);
       }
     });
 
     this.toggleAllOptionsClass(isSelected);
-    this.setValue(selectedValues, true);
+    this.setValue(selectedValues, selectedIndexes, true);
     this.renderOptions();
   }
 
@@ -1721,7 +1750,7 @@ export class VirtualSelect {
     });
 
     this.beforeValueSet(true);
-    this.setValue(null, true);
+    this.setValue(null, null, true);
     this.afterValueSet();
   }
 

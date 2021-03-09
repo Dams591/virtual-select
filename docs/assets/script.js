@@ -104,18 +104,6 @@ function initPageGetStarted() {
     zIndex: config.zIndex,
   });
 
-  document
-    .querySelector('#single-select')
-    .addEventListener('opened', function () {
-      console.log('opened');
-    });
-
-  document
-    .querySelector('#single-select')
-    .addEventListener('closed', function () {
-      console.log('closed');
-    });
-
   VirtualSelect.init({
     ele: '#multiple-select',
     options: getOptions(),
@@ -123,6 +111,13 @@ function initPageGetStarted() {
     placeholder: 'Select multiple values',
     zIndex: config.zIndex,
   });
+
+  document
+    .querySelector('#multiple-select')
+    .addEventListener('change', function () {
+      console.log('indexes' + this.index);
+      console.log('values' + this.value);
+    });
 }
 
 function initPageExamples() {
