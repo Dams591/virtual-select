@@ -1012,11 +1012,17 @@ export class VirtualSelect {
         ? true
         : false;
     this.setValueText();
-    DomUtils.toggleClass(
-      this.$wrapper,
-      'has-value',
-      Utils.isNotEmpty(this.selectedValues)
-    );
+
+    if (this.selectedValues && this.selectedValues[0] === noneOptionValue) {
+      DomUtils.removeClass(this.$wrapper, 'has-value');
+    } else {
+      DomUtils.toggleClass(
+        this.$wrapper,
+        'has-value',
+        Utils.isNotEmpty(this.selectedValues)
+      );
+    }
+
     DomUtils.toggleClass(
       this.$wrapper,
       'max-value-selected',
@@ -1073,7 +1079,10 @@ export class VirtualSelect {
 
       const aggregatedValueText = valueText.join(', ');
 
-      if (aggregatedValueText === '') {
+      if (
+        aggregatedValueText === '' ||
+        (selectedValues && selectedValues[0] === noneOptionValue)
+      ) {
         this.$valueText.innerHTML = this.placeholder;
       } else {
         this.$valueText.innerHTML = aggregatedValueText;
