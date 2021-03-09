@@ -1681,16 +1681,6 @@ export class VirtualSelect {
       this.beforeSelectNewValue();
     }
 
-    // 'None' clicked ? reset value.
-    if (
-      !this.multiple &&
-      this.allowNoneOption &&
-      selectedValue === noneOptionValue
-    ) {
-      this.reset();
-      return;
-    }
-
     this.setValue(selectedValues, selectedIndexes, true);
 
     // In 'List' only
