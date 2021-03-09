@@ -869,8 +869,8 @@ export class VirtualSelect {
       }
     };
 
-    // Add none option
-    if (!this.multiple && this.allowNoneOption) {
+    // Add none option only when in list mode (always open and only for single selection)
+    if (this.keepAlwaysOpen && !this.multiple && this.allowNoneOption) {
       options.unshift({
         value: noneOptionValue,
         label: this.noneOptionText,
