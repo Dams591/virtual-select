@@ -994,7 +994,7 @@ export class VirtualSelect {
     // Index
     if (!index) {
       this.selectedIndexes = [];
-    } else if (Array.isArray(value)) {
+    } else if (Array.isArray(index)) {
       this.selectedIndexes = [...index];
     } else {
       this.selectedIndexes = [index];
