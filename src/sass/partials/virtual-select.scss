@@ -1,3 +1,7 @@
+$thumbColor: rgba(0, 0, 0, 0.6);
+$scrollBg: rgba(156, 156, 156, 0.6);
+$paddingBase: 8px;
+
 body.vscomp-popup-active {
   overflow: hidden;
 }
@@ -168,6 +172,18 @@ body.vscomp-popup-active {
   position: relative;
   max-height: #{$dropboxHeight - $searchHeight};
   overflow: auto;
+  // Scrollbar non web-kit (firefox ...)
+  scrollbar-color: $thumbColor $scrollBg;
+  scrollbar-width: thin;
+}
+// Webkit scrollbar style
+.vscomp-options-container::-webkit-scrollbar {
+  background: $scrollBg;
+  width: 7px;
+  cursor: pointer;
+}
+.vscomp-options-container::-webkit-scrollbar-thumb {
+  background: $thumbColor;
 }
 
 .vscomp-option {
@@ -175,7 +191,7 @@ body.vscomp-popup-active {
   flex-wrap: wrap;
   position: relative;
   align-items: center;
-  padding: 10px 15px;
+  padding: 0 $paddingBase;
   height: $optionHeight;
   align-items: center;
   cursor: pointer;
@@ -258,13 +274,14 @@ body.vscomp-popup-active {
   align-items: center;
   position: relative;
   height: $searchHeight;
-  padding: 0 5px 0 15px;
+  padding: 0px $paddingBase;
   border-bottom: 1px solid $borderColor;
 }
 
 .vscomp-search-input {
   border: none;
-  width: calc(100% - #{$searchClearWidth});
+  width: calc(100% - 35px);
+  background: transparent;
   height: #{$searchHeight - 2px};
   padding: 10px 0;
   font-size: 15px;
@@ -323,7 +340,7 @@ body.vscomp-popup-active {
     position: relative;
     width: 15px;
     height: 15px;
-    margin-right: 10px;
+    margin-right: $paddingBase;
 
     &::after {
       content: '';
