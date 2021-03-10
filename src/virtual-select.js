@@ -349,15 +349,9 @@ export class VirtualSelect {
       'click',
       'onDropboxCloseButtonClick'
     );
-    if (this.overrideScrollEventSelector) {
-      this.addEvent(
-        this.$ele.querySelector(this.overrideScrollEventSelector),
-        'scroll',
-        'onOptionsScroll'
-      );
-    } else {
-      this.addEvent(this.$optionsContainer, 'scroll', 'onOptionsScroll');
-    }
+
+    this.addEvent(this.$optionsContainer, 'scroll', 'onOptionsScroll');
+
     this.addEvent(this.$options, 'click', 'onOptionsClick');
     this.addEvent(this.$options, 'mouseover', 'onOptionsMouseOver');
     this.addEvent(this.$options, 'touchmove', 'onOptionsTouchMove');
@@ -402,7 +396,11 @@ export class VirtualSelect {
   }
 
   onDocumentClick(e) {
-    VirtualSelect.closeAllDropbox(e.target.closest('.vscomp-wrapper'));
+    let $eleToKeepOpen = e.target.closest('.vscomp-wrapper');
+
+    if ($eleToKeepOpen !== this.$wrapper) {
+      this.closeDropbox();
+    }
   }
 
   onKeyDown(e) {
@@ -487,7 +485,7 @@ export class VirtualSelect {
       '.vscomp-option:not(.disabled):not(.group-title)'
     );
 
-    if ($ele) {
+    if ($ele && this.isOpened()) {
       this.focusOption(null, $ele);
     }
   }
@@ -2002,16 +2000,6 @@ export class VirtualSelect {
     });
 
     return singleEle ? instances[0] : instances;
-  }
-
-  static closeAllDropbox($eleToKeepOpen) {
-    document.querySelectorAll('.vscomp-wrapper').forEach(($ele) => {
-      if ($eleToKeepOpen && $eleToKeepOpen == $ele) {
-        return;
-      }
-
-      $ele.parentElement.virtualSelect.closeDropbox();
-    });
   }
 
   static resetForm(e) {
