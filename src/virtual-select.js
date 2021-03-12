@@ -2022,8 +2022,8 @@ export class VirtualSelect {
     this.virtualSelect.setValueMethod(value, silentChange);
   }
 
-  static setOptionsMethod(options) {
-    this.virtualSelect.setOptionsMethod(options);
+  static setOptionsMethod(options, keepValue) {
+    this.virtualSelect.setOptionsMethod(options, keepValue);
   }
 
   static setDisabledOptionsMethod(options) {
