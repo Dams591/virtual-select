@@ -127,6 +127,16 @@ function initPageGetStarted() {
       .querySelector('#multiple-select')
       .setOptions([{ value: 1, label: 'Option 1' }], true);
   }, 5000);
+
+  setTimeout(() => {
+    document.querySelector('#multiple-select').setOptions(
+      [
+        { value: 1, label: 'Option 1' },
+        { value: 2, label: 'Option 3' },
+      ],
+      true
+    );
+  }, 10000);
 }
 
 function initPageExamples() {
