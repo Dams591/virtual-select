@@ -1113,8 +1113,8 @@ export class VirtualSelect {
     DomUtils.setData(this.$valueText, 'tooltip', valueTooltip.join(', '));
   }
 
-  setSearchValue(value, skipInputSet) {
-    if (value === this.searchValueOriginal) {
+  setSearchValue(value, skipInputSet, force) {
+    if (value === this.searchValueOriginal && !force) {
       return;
     }
 
@@ -1813,7 +1813,7 @@ export class VirtualSelect {
         this.setValueMethod(this.selectedValues, this.silentInitialValueSet); // Reselect valid values
       }
 
-      this.setSearchValue(search, false);
+      this.setSearchValue(search, false, true);
     }
 
     this.setOptionsHeight();
