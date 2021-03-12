@@ -1803,8 +1803,11 @@ export class VirtualSelect {
   }
 
   afterSetOptions(keepValue) {
+    let search = this.searchValue; // Need to be stored because setValueMethod will empty this.searchValue
+
     if (keepValue) {
-      this.setSelectedProp();
+      this.setValueMethod(this.selectedValues, this.silentInitialValueSet); // Reselect valid values
+      this.setSearchValue(search, false);
     }
 
     this.setOptionsHeight();

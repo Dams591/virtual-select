@@ -121,6 +121,12 @@ function initPageGetStarted() {
       console.log('indexes' + this.index);
       console.log('values' + this.value);
     });
+
+  setTimeout(() => {
+    document
+      .querySelector('#multiple-select')
+      .setOptions([{ value: 1, label: 'Option 1' }], true);
+  }, 5000);
 }
 
 function initPageExamples() {
