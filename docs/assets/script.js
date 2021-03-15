@@ -101,16 +101,21 @@ function initPageGetStarted() {
     options: getOptions(),
     //search: true,
     //keepAlwaysOpen: true,
-    appendToBody: true,
+    //  appendToBody: true,
     allowNoneOption: true,
     showSelectedOptionsFirst: true,
     placeholder: 'Select a single value',
     zIndex: config.zIndex,
   });
 
+  let maxLength = getOptions()
+    .map((el) => el.label)
+    .reduce((a, b) => (a.length > b.length ? a : b), '');
+  // console.log(maxLength);
+
   VirtualSelect.init({
     ele: '#multiple-select',
-    appendToBody: true,
+    //appendToBody: true,
     options: getOptions(),
     multiple: true,
     placeholder: 'Select multiple values',

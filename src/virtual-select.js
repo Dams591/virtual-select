@@ -327,6 +327,13 @@ export class VirtualSelect {
         'has-no-search-results',
         hasNoSearchResults
       );
+
+      if (this.appendToBody)
+        DomUtils.toggleClass(
+          this.$dropboxEl,
+          'has-no-search-results',
+          hasNoSearchResults
+        );
     }
 
     DomUtils.toggleClass(this.$wrapper, 'has-no-options', hasNoOptions);
@@ -380,6 +387,13 @@ export class VirtualSelect {
   /** dom event methods - start */
   addEvents() {
     this.addEvent(document, 'click', 'onDocumentClick');
+
+    if (this.appendToBody) {
+      window.addEventListener('resize', (e) => {
+        this.setDropboxPosition();
+      });
+    }
+
     this.addEvent(this.$wrapper, 'keydown', 'onKeyDown');
     this.addEvent(this.$toggleButton, 'click', 'onToggleButtonClick');
     this.addEvent(this.$clearButton, 'click', 'onClearButtonClick');
@@ -1179,6 +1193,8 @@ export class VirtualSelect {
     this.searchValueOriginal = value;
 
     DomUtils.toggleClass(this.$wrapper, 'has-search-value', value);
+    if (this.appendToBody)
+      DomUtils.toggleClass(this.$dropboxEl, 'has-search-value', value);
 
     if (this.hasServerSearch) {
       this.serverSearch(searchValue);
