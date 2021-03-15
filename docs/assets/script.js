@@ -100,7 +100,8 @@ function initPageGetStarted() {
     ele: '#single-select',
     options: getOptions(),
     //search: true,
-    keepAlwaysOpen: true,
+    //keepAlwaysOpen: true,
+    appendToBody: true,
     allowNoneOption: true,
     showSelectedOptionsFirst: true,
     placeholder: 'Select a single value',
@@ -109,6 +110,7 @@ function initPageGetStarted() {
 
   VirtualSelect.init({
     ele: '#multiple-select',
+    appendToBody: true,
     options: getOptions(),
     multiple: true,
     placeholder: 'Select multiple values',
@@ -122,21 +124,21 @@ function initPageGetStarted() {
       console.log('values' + this.value);
     });
 
-  setTimeout(() => {
-    document
-      .querySelector('#multiple-select')
-      .setOptions([{ value: 1, label: 'Option 1' }], true);
-  }, 5000);
+  // setTimeout(() => {
+  //   document
+  //     .querySelector('#multiple-select')
+  //     .setOptions([{ value: 1, label: 'Option 1' }], true);
+  // }, 5000);
 
-  setTimeout(() => {
-    document.querySelector('#multiple-select').setOptions(
-      [
-        { value: 1, label: 'Option 1' },
-        { value: 2, label: 'Option 3' },
-      ],
-      true
-    );
-  }, 10000);
+  // setTimeout(() => {
+  //   document.querySelector('#multiple-select').setOptions(
+  //     [
+  //       { value: 1, label: 'Option 1' },
+  //       { value: 2, label: 'Option 3' },
+  //     ],
+  //     true
+  //   );
+  // }, 10000);
 }
 
 function initPageExamples() {

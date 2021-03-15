@@ -62,6 +62,7 @@ export class VirtualSelect {
    * @property {string} [searchPlaceholder=Search...] - Text to show inside search input
    * @property {boolean} [allowNoneOption=false] - In single selection mode only and when keep always open is on: display a none option that clears the selection
    * @property {string} [noneOptionText=None] - Text to be display if allowNone option is active
+   * @property {boolean} [appendToBody=false] - When set to true and keepAlways open is off we are adding the dropbox element to the body
    */
   constructor(options) {
     try {
@@ -89,43 +90,76 @@ export class VirtualSelect {
       'z-index': this.zIndex,
     };
 
-    if (this.additionalClasses) {
-      wrapperClasses += ' ' + this.additionalClasses;
-    }
+    const getWrapperClasses = () => {
+      let classes = '';
 
-    if (this.multiple) {
-      wrapperClasses += ' multiple';
-
-      if (!this.disableSelectAll) {
-        wrapperClasses += ' has-select-all';
+      if (this.additionalClasses) {
+        classes += ' ' + this.additionalClasses;
       }
-    }
 
-    if (this.position === 'top') {
-      wrapperClasses += ' position-top';
-    }
+      if (this.multiple) {
+        classes += ' multiple';
 
-    if (!this.hideClearButton) {
-      wrapperClasses += ' has-clear-button';
-    }
-
-    if (this.keepAlwaysOpen) {
-      wrapperClasses += ' keep-always-open opened';
-    } else {
-      wrapperClasses += ' closed';
-    }
-
-    if (this.showAsPopup) {
-      wrapperClasses += ' show-as-popup';
-    } else {
-      if (this.dropboxWidth) {
-        dropboxContainerStyle.width = this.dropboxWidth;
+        if (!this.disableSelectAll) {
+          classes += ' has-select-all';
+        }
       }
-    }
 
-    if (this.hasSearch) {
-      wrapperClasses += ' has-search-input';
-    }
+      if (this.position === 'top') {
+        classes += ' position-top';
+      }
+
+      if (!this.hideClearButton) {
+        classes += ' has-clear-button';
+      }
+
+      if (this.keepAlwaysOpen) {
+        classes += ' keep-always-open opened';
+      } else {
+        classes += ' closed';
+      }
+
+      if (this.showAsPopup) {
+        classes += ' show-as-popup';
+      } else {
+        if (this.dropboxWidth) {
+          dropboxContainerStyle.width = this.dropboxWidth;
+        }
+      }
+
+      if (this.hasSearch) {
+        classes += ' has-search-input';
+      }
+
+      return classes;
+    };
+
+    wrapperClasses += getWrapperClasses();
+
+    this.guid = Utils.generateUUID();
+
+    let dropboxContainer = `<div id="vs-${
+      this.guid
+    }" class="vscomp-dropbox-container" ${DomUtils.getStyleText(
+      dropboxContainerStyle
+    )}>
+      <div class="vscomp-dropbox">
+        <div class="vscomp-search-wrapper"></div>
+
+        <div class="vscomp-options-container">
+          <div class="vscomp-options-loader"></div>
+
+          <div class="vscomp-options-list">
+            <div class="vscomp-options"></div>
+          </div>
+        </div>
+
+        <div class="vscomp-no-options">${this.noOptionsText}</div>
+        <div class="vscomp-no-search-results">${this.noSearchResultsText}</div>
+
+        <span class="vscomp-dropbox-close-button"><i class="vscomp-clear-icon"></i></span>
+      </div>
+    </div>`;
 
     let html = `<div class="${wrapperClasses}" tabindex="0">
         <input type="hidden" name="${this.name}" class="vscomp-hidden-input">
@@ -142,51 +176,57 @@ export class VirtualSelect {
           </div>
         </div>
 
-        <div class="vscomp-dropbox-container" ${DomUtils.getStyleText(
-          dropboxContainerStyle
-        )}>
-          <div class="vscomp-dropbox">
-            <div class="vscomp-search-wrapper"></div>
+        ${this.keepAlwaysOpen || !this.appendToBody ? dropboxContainer : ''}
 
-            <div class="vscomp-options-container">
-              <div class="vscomp-options-loader"></div>
-
-              <div class="vscomp-options-list">
-                <div class="vscomp-options"></div>
-              </div>
-            </div>
-
-            <div class="vscomp-no-options">${this.noOptionsText}</div>
-            <div class="vscomp-no-search-results">${
-              this.noSearchResultsText
-            }</div>
-
-            <span class="vscomp-dropbox-close-button"><i class="vscomp-clear-icon"></i></span>
-          </div>
-        </div>
       </div>`;
 
     this.$ele.innerHTML = html;
     this.$body = document.querySelector('body');
+
     this.$wrapper = this.$ele.querySelector('.vscomp-wrapper');
     this.$toggleButton = this.$ele.querySelector('.vscomp-toggle-button');
     this.$clearButton = this.$ele.querySelector('.vscomp-clear-button');
-    this.$dropboxContainer = this.$ele.querySelector(
-      '.vscomp-dropbox-container'
-    );
     this.$dropboxCloseButton = this.$ele.querySelector(
       '.vscomp-dropbox-close-button'
     );
-    this.$search = this.$ele.querySelector('.vscomp-search-wrapper');
-    this.$optionsContainer = this.$ele.querySelector(
+
+    if (!this.keepAlwaysOpen && this.appendToBody) {
+      // -----------------------
+      // Append to body (beta)
+      // -----------------------
+
+      this.$body.append(
+        document.createRange().createContextualFragment(dropboxContainer)
+      );
+
+      this.$dropboxContainer = document.querySelector(
+        `#vs-${this.guid}.vscomp-dropbox-container`
+      );
+
+      this.$dropboxEl = document.querySelector(`#vs-${this.guid}`);
+
+      let classes = 'vscomp-wrapper-body';
+      classes += getWrapperClasses();
+
+      DomUtils.addClass(this.$dropboxEl, `${classes}`);
+    } else {
+      this.$dropboxContainer = this.$ele.querySelector(
+        '.vscomp-dropbox-container'
+      );
+      this.$dropboxEl = this.$ele;
+    }
+
+    this.$search = this.$dropboxEl.querySelector('.vscomp-search-wrapper');
+    this.$optionsContainer = this.$dropboxEl.querySelector(
       '.vscomp-options-container'
     );
-    this.$optionsList = this.$ele.querySelector('.vscomp-options-list');
-    this.$options = this.$ele.querySelector('.vscomp-options');
+
+    this.$optionsList = this.$dropboxEl.querySelector('.vscomp-options-list');
+    this.$options = this.$dropboxEl.querySelector('.vscomp-options');
     this.$valueText = this.$ele.querySelector('.vscomp-value');
     this.$hiddenInput = this.$ele.querySelector('.vscomp-hidden-input');
-    this.$noOptions = this.$ele.querySelector('.vscomp-no-options');
-    this.$noSearchResults = this.$ele.querySelector(
+    this.$noOptions = this.$dropboxEl.querySelector('.vscomp-no-options');
+    this.$noSearchResults = this.$dropboxEl.querySelector(
       '.vscomp-no-search-results'
     );
 
@@ -321,12 +361,12 @@ export class VirtualSelect {
       </div>`;
 
     this.$search.innerHTML = html;
-    this.$searchInput = this.$ele.querySelector('.vscomp-search-input');
-    this.$searchClear = this.$ele.querySelector('.vscomp-search-clear');
-    this.$toggleAllButton = this.$ele.querySelector(
+    this.$searchInput = this.$dropboxEl.querySelector('.vscomp-search-input');
+    this.$searchClear = this.$dropboxEl.querySelector('.vscomp-search-clear');
+    this.$toggleAllButton = this.$dropboxEl.querySelector(
       '.vscomp-toggle-all-button'
     );
-    this.$toggleAllCheckbox = this.$ele.querySelector(
+    this.$toggleAllCheckbox = this.$dropboxEl.querySelector(
       '.vscomp-toggle-all-checkbox'
     );
 
@@ -396,6 +436,16 @@ export class VirtualSelect {
   }
 
   onDocumentClick(e) {
+    if (
+      this.appendToBody &&
+      this.multiple &&
+      this.isOpened() &&
+      e.target.closest(`#vs-${this.guid}`)
+    ) {
+      return; // Don't close dropbox if append to body, multiple and click inside dropbow
+      e.stopPropagation();
+    }
+
     let $eleToKeepOpen = e.target.closest('.vscomp-wrapper');
 
     if ($eleToKeepOpen !== this.$wrapper) {
@@ -600,6 +650,7 @@ export class VirtualSelect {
     this.itemsSelectedMessage = options.itemsSelectedMessage;
     this.allowNoneOption = options.allowNoneOption;
     this.noneOptionText = options.noneOptionText;
+    this.appendToBody = options.appendToBody;
 
     this.selectedValues = [];
     this.selectedIndexes = [];
@@ -671,6 +722,7 @@ export class VirtualSelect {
       itemsSelectedMessage: 'selected',
       allowNoneOption: false,
       noneOptionText: 'None',
+      appendToBody: false,
     };
 
     if (options.hasOptionDescription) {
@@ -1238,12 +1290,38 @@ export class VirtualSelect {
       }
     }
 
-    DomUtils.toggleClass(
-      this.$wrapper,
-      'position-top',
-      moreVisibleSides.vertical === 'top'
-    );
-    DomUtils.toggleClass(this.$wrapper, 'position-left', showOnLeft);
+    if (this.appendToBody) {
+      // BETA
+
+      let eleCoords = this.$ele.getBoundingClientRect();
+      let x = eleCoords.left + window.scrollX;
+      let y = eleCoords.top + window.scrollY;
+
+      this.$dropboxEl.style.width = `${this.$ele.offsetWidth}px`; // TODO or custom dropdown width
+      this.$dropboxEl.style.left = `${x}px`;
+
+      if (moreVisibleSides.vertical === 'top') {
+        this.$dropboxEl.style.top = `${
+          y - this.$dropboxContainer.offsetHeight - 4
+        }px`;
+      } else {
+        this.$dropboxEl.style.top = `${y + this.$ele.offsetHeight + 4}px`;
+      }
+
+      DomUtils.toggleClass(
+        this.$dropboxContainer,
+        'position-top',
+        moreVisibleSides.vertical === 'top'
+      );
+      DomUtils.toggleClass(this.$dropboxContainer, 'position-left', showOnLeft);
+    } else {
+      DomUtils.toggleClass(
+        this.$wrapper,
+        'position-top',
+        moreVisibleSides.vertical === 'top'
+      );
+      DomUtils.toggleClass(this.$wrapper, 'position-left', showOnLeft);
+    }
   }
 
   setNewOption() {
@@ -1458,9 +1536,11 @@ export class VirtualSelect {
   openDropbox(isSilent) {
     this.setDropboxPosition();
     DomUtils.removeClass(this.$wrapper, 'closed');
+    DomUtils.removeClass(this.$dropboxEl, 'opened');
 
     setTimeout(() => {
       DomUtils.addClass(this.$wrapper, 'opened');
+      DomUtils.addClass(this.$dropboxEl, 'opened');
       this.dispatchEvent(this.$ele, 'opened');
 
       if (!isSilent) {
@@ -1487,6 +1567,7 @@ export class VirtualSelect {
 
     setTimeout(() => {
       DomUtils.removeClass(this.$wrapper, 'opened focused');
+      DomUtils.removeClass(this.$dropboxEl, 'opened focused');
       this.dispatchEvent(this.$ele, 'closed');
       this.removeOptionFocus();
 
@@ -1500,6 +1581,12 @@ export class VirtualSelect {
 
     setTimeout(() => {
       DomUtils.addClass(this.$wrapper, 'closed');
+      DomUtils.removeClass(this.$dropboxEl, 'closed');
+      if (this.appendToBody) {
+        // Hide dropbox somewhere farrrrrrr away
+        this.$dropboxEl.style.left = `-200px`;
+        this.$dropboxEl.style.top = `-200px`;
+      }
     }, transitionDuration);
   }
 

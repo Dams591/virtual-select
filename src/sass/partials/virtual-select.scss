@@ -12,7 +12,8 @@ body.vscomp-popup-active {
   max-width: 250px;
 }
 
-.vscomp-wrapper {
+.vscomp-wrapper,
+.vscomp-wrapper-body {
   display: inline-flex;
   position: relative;
   width: 100%;
@@ -30,6 +31,12 @@ body.vscomp-popup-active {
 
   &:focus {
     outline: none;
+  }
+}
+
+.vscomp-wrapper-body {
+  .vscomp-dropbox {
+    width: 100%;
   }
 }
 
@@ -158,6 +165,19 @@ body.vscomp-popup-active {
   left: 0;
   width: 100%;
   z-index: $zIndex;
+
+  &.opened {
+    .vscomp-dropbox {
+      opacity: 1;
+      @include prefix(transform, translate3d(0, 0, 0));
+    }
+  }
+
+  &.closed {
+    .vscomp-dropbox-container {
+      display: none;
+    }
+  }
 }
 
 .vscomp-dropbox {
@@ -334,7 +354,8 @@ body.vscomp-popup-active {
   }
 }
 
-.vscomp-wrapper {
+.vscomp-wrapper,
+.vscomp-wrapper-body {
   .checkbox-icon {
     display: inline-flex;
     position: relative;
