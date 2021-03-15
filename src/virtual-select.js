@@ -1913,7 +1913,7 @@ export class VirtualSelect {
         this.setValueMethod(this.selectedValues, this.silentInitialValueSet); // Reselect valid values
       }
 
-      this.setSearchValue(search, false, true);
+      if (this.search) this.setSearchValue(search, false, true);
     }
 
     this.setOptionsHeight();
