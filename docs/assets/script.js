@@ -115,7 +115,7 @@ function initPageGetStarted() {
 
   VirtualSelect.init({
     ele: '#multiple-select',
-    //appendToBody: true,
+    appendToBody: true,
     options: getOptions(),
     multiple: true,
     placeholder: 'Select multiple values',

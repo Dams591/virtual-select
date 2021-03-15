@@ -387,13 +387,6 @@ export class VirtualSelect {
   /** dom event methods - start */
   addEvents() {
     this.addEvent(document, 'click', 'onDocumentClick');
-
-    if (this.appendToBody) {
-      window.addEventListener('resize', (e) => {
-        this.setDropboxPosition();
-      });
-    }
-
     this.addEvent(this.$wrapper, 'keydown', 'onKeyDown');
     this.addEvent(this.$toggleButton, 'click', 'onToggleButtonClick');
     this.addEvent(this.$clearButton, 'click', 'onClearButtonClick');
@@ -573,7 +566,11 @@ export class VirtualSelect {
   }
 
   onResize() {
-    this.setOptionsContainerHeight(true);
+    if (this.appendToBody) {
+      if (this.isOpened()) {
+        this.closeDropbox(true);
+      }
+    } else this.setOptionsContainerHeight(true);
   }
   /** dom event methods - end */
 
