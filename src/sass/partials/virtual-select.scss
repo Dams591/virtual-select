@@ -361,7 +361,8 @@ body.vscomp-popup-active {
     position: relative;
     // width: 15px;
     // height: 15px;
-    margin-right: $paddingBase;
+    margin-right: 4px;
+    margin-top: 2px;
 
     &::after {
       content: '\f0c8';
