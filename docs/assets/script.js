@@ -100,7 +100,7 @@ function initPageGetStarted() {
     ele: '#single-select',
     options: getOptions(),
     //search: true,
-    //keepAlwaysOpen: true,
+    // keepAlwaysOpen: true,
     //  appendToBody: true,
     allowNoneOption: true,
     showSelectedOptionsFirst: true,
@@ -115,8 +115,9 @@ function initPageGetStarted() {
 
   VirtualSelect.init({
     ele: '#multiple-select',
-    appendToBody: true,
+    // keepAlwaysOpen: true,
     options: getOptions(),
+    showSelectedOptionsFirst: true,
     multiple: true,
     placeholder: 'Select multiple values',
     zIndex: config.zIndex,

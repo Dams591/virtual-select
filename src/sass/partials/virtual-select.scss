@@ -71,9 +71,9 @@ body.vscomp-popup-active {
   justify-content: center;
 
   &::after {
-    content: '';
-    @include prefix(transform, rotate(45deg));
-    border: 1px solid transparent;
+    content: '\f0d7';
+    font-family: 'Font Awesome 5 Pro';
+    font-weight: 800;
     border-right-color: $arrowColor;
     border-bottom-color: $arrowColor;
     width: $arrowSize;
@@ -359,21 +359,21 @@ body.vscomp-popup-active {
   .checkbox-icon {
     display: inline-flex;
     position: relative;
-    width: 15px;
-    height: 15px;
+    // width: 15px;
+    // height: 15px;
     margin-right: $paddingBase;
 
     &::after {
-      content: '';
+      content: '\f0c8';
+      font-family: 'Font Awesome 5 Pro';
       display: inline-block;
       width: 100%;
       height: 100%;
-      border: 2px solid $checkboxColor;
-      @include prefix(transition-duration, 0.2s);
     }
 
     &.checked::after {
-      @include checkbox-checked;
+      content: '\f14a';
+      font-family: 'Font Awesome 5 Pro';
     }
   }
 
@@ -426,11 +426,13 @@ body.vscomp-popup-active {
   }
 
   &.selected .checkbox-icon::after {
-    width: 50%;
-    border-color: $primaryColor;
-    border-left-color: transparent;
-    border-top-color: transparent;
-    @include prefix(transform, rotate(45deg) translate(1px, -4px));
+    content: '\f14a';
+    // width: 50%;
+    // border-color: $primaryColor;
+    // border-left-color: transparent;
+    // border-top-color: transparent;
+
+    // @include prefix(transform, rotate(45deg) translate(1px, -4px));
   }
 
   &.has-select-all {

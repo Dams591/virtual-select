@@ -525,6 +525,12 @@ export class VirtualSelect {
     this.selectOption(
       e.target.closest('.vscomp-option:not(.disabled):not(.group-title)')
     );
+    if (this.multiple && this.showSelectedOptionsFirst) {
+      // Move selected to top was triggering closeDropbow beacause of onDropboxContainerClick
+      // When showSelectedOptionsFirst is on
+      e.stopPropagation();
+      return false;
+    }
   }
 
   onDropboxContainerClick(e) {
@@ -1794,7 +1800,7 @@ export class VirtualSelect {
     // In 'List' only
     // immediately move item to top if options is on.
     // Dropdown mode will wait until the next reopen to do so.
-    if (this.keepAlwaysOpen && this.showSelectedOptionsFirst) {
+    if (this.showSelectedOptionsFirst) {
       const lastScrollTop = this.$optionsContainer.scrollTop;
       this.moveSelectedOptionsFirst();
       this.$optionsContainer.scrollTop = lastScrollTop;

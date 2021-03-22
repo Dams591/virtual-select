@@ -4,11 +4,8 @@
 }
 
 @mixin checkbox-checked {
-  width: 50%;
-  border-color: $primaryColor;
-  border-left-color: transparent;
-  border-top-color: transparent;
-  @include prefix(transform, rotate(45deg) translate(1px, -4px));
+  content: '\f14a';
+  font-family: 'Font Awesome 5 Pro';
 }
 
 @mixin ellipse {
