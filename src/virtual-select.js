@@ -1675,7 +1675,7 @@ export class VirtualSelect {
 
       DomUtils.addClass($newFocusedEle, 'focused');
       this.toggleFocusedProp(DomUtils.getData($newFocusedEle, 'index'), true);
-      this.moveFocusedOptionToView($newFocusedEle);
+      if (direction) this.moveFocusedOptionToView($newFocusedEle);
     }
   }
 

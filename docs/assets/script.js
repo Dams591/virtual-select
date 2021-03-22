@@ -100,7 +100,7 @@ function initPageGetStarted() {
     ele: '#single-select',
     options: getOptions(),
     //search: true,
-    // keepAlwaysOpen: true,
+    keepAlwaysOpen: true,
     //  appendToBody: true,
     allowNoneOption: true,
     showSelectedOptionsFirst: true,
