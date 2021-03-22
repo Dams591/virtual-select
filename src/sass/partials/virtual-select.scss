@@ -62,7 +62,7 @@ body.vscomp-popup-active {
 
 .has-clear-button {
   .vscomp-value {
-    width: calc(100% - 10px);
+    width: calc(100% - 10px) !important;
   }
 }
 
