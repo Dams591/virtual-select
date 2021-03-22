@@ -60,7 +60,7 @@ body.vscomp-popup-active {
   text-overflow: ellipsis;
 }
 
-.has-clear-button {
+.has-clear-button.has-value {
   .vscomp-value {
     width: calc(100% - 10px) !important;
   }
