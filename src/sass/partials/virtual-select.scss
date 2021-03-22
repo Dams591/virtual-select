@@ -77,8 +77,6 @@ body.vscomp-popup-active {
     border-right-color: $arrowColor;
     border-bottom-color: $arrowColor;
     width: $arrowSize;
-    height: $arrowSize;
-    margin-top: -6px;
   }
 }
 
@@ -118,7 +116,7 @@ body.vscomp-popup-active {
   position: absolute;
   display: none;
   top: 50%;
-  right: $arrowWidth;
+  right: 24px;
   width: $clearButtonWidth;
   height: $clearButtonWidth;
   justify-content: center;
@@ -126,16 +124,16 @@ body.vscomp-popup-active {
   border-radius: 50%;
   margin-top: -#{$clearButtonWidth / 2};
 
-  &:hover {
-    background: $focusColor;
+  // &:hover {
+  //   background: $focusColor;
 
-    .vscomp-clear-icon {
-      &::before,
-      &::after {
-        background: $iconHoverColor;
-      }
-    }
-  }
+  //   .vscomp-clear-icon {
+  //     &::before,
+  //     &::after {
+  //       background: $iconHoverColor;
+  //     }
+  //   }
+  // }
 }
 
 .vscomp-dropbox-close-button {
