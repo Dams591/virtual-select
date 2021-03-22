@@ -1100,6 +1100,13 @@ export class VirtualSelect {
     if (triggerEvent) {
       this.dispatchEvent(this.$ele, 'change');
     }
+
+    // immediately move item to top if options is on.
+    if (this.showSelectedOptionsFirst) {
+      const lastScrollTop = this.$optionsContainer.scrollTop;
+      this.moveSelectedOptionsFirst();
+      this.$optionsContainer.scrollTop = lastScrollTop;
+    }
   }
 
   setValueText() {
@@ -1797,14 +1804,7 @@ export class VirtualSelect {
 
     this.setValue(selectedValues, selectedIndexes, true);
 
-    // In 'List' only
-    // immediately move item to top if options is on.
-    // Dropdown mode will wait until the next reopen to do so.
-    if (this.showSelectedOptionsFirst) {
-      const lastScrollTop = this.$optionsContainer.scrollTop;
-      this.moveSelectedOptionsFirst();
-      this.$optionsContainer.scrollTop = lastScrollTop;
-    }
+    console.log('aaaa');
   }
 
   selectFocusedOption() {

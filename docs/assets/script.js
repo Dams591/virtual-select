@@ -115,11 +115,12 @@ function initPageGetStarted() {
 
   VirtualSelect.init({
     ele: '#multiple-select',
-    // keepAlwaysOpen: true,
+    keepAlwaysOpen: true,
     options: getOptions(),
     showSelectedOptionsFirst: true,
     multiple: true,
     placeholder: 'Select multiple values',
+    selectedValue: [2, 3],
     zIndex: config.zIndex,
   });
 
