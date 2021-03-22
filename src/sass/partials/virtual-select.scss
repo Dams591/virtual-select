@@ -60,6 +60,12 @@ body.vscomp-popup-active {
   text-overflow: ellipsis;
 }
 
+.has-clear-button {
+  .vscomp-value {
+    width: calc(100% - 10px);
+  }
+}
+
 .vscomp-arrow {
   position: absolute;
   display: flex;
@@ -116,7 +122,7 @@ body.vscomp-popup-active {
   position: absolute;
   display: none;
   top: 50%;
-  right: 24px;
+  right: 20px;
   width: $clearButtonWidth;
   height: $clearButtonWidth;
   justify-content: center;
