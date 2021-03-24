@@ -98,12 +98,27 @@ function initPageGetStarted() {
 
   VirtualSelect.init({
     ele: '#single-select',
-    options: getOptions(),
+    options: [
+      {
+        value: 'Australia',
+        label: 'Ford Focus',
+      },
+      {
+        value: 'Australia',
+        label: 'Porsche',
+      },
+      {
+        value: 'Australia',
+        label: 'Mercedes',
+      },
+    ],
     //search: true,
-    keepAlwaysOpen: true,
+    //keepAlwaysOpen: true,
     //  appendToBody: true,
+    //options: getOptions(),
     allowNoneOption: true,
-    showSelectedOptionsFirst: true,
+    selectedValue: 'Australia',
+    //showSelectedOptionsFirst: true,
     placeholder: 'Select a single value',
     zIndex: config.zIndex,
   });
@@ -116,19 +131,34 @@ function initPageGetStarted() {
   VirtualSelect.init({
     ele: '#multiple-select',
     keepAlwaysOpen: true,
-    options: getOptions(),
-    showSelectedOptionsFirst: true,
+    //options: getOptions(),
+    options: [
+      {
+        value: 'Australia',
+        label: 'Ford Focus',
+      },
+      {
+        value: 'Australia',
+        label: 'Porsche',
+      },
+      {
+        value: 'Australia',
+        label: 'Mercedes',
+      },
+    ],
+    // showSelectedOptionsFirst: true,
     multiple: true,
     placeholder: 'Select multiple values',
-    selectedValue: [2, 3],
+    selectedValue: ['Australia'],
+    //selectedValue: [2, 3, 4, 5],
     zIndex: config.zIndex,
   });
 
   document
     .querySelector('#multiple-select')
     .addEventListener('change', function () {
-      console.log('indexes' + this.index);
-      console.log('values' + this.value);
+      // console.log('indexes' + this.index);
+      // console.log('values' + this.value);
     });
 
   // setTimeout(() => {

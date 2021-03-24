@@ -830,17 +830,20 @@ export class VirtualSelect {
     let validValues = [];
     let validIndexes = [];
 
-    this.options.forEach((d, idx) => {
+    for (let d of this.options) {
       let isSelected = value.indexOf(d.value) !== -1;
 
       if (isSelected && !d.isDisabled && !d.isGroupTitle) {
+        if (validValues.indexOf(d.value) !== -1 && this.multiple) break; // If multiple selection with same value only select one.
+
         d.isSelected = true;
         validValues.push(d.value);
-        validIndexes.push(idx);
+        validIndexes.push(d.index);
+        if (!this.multiple) break; // if single selection only select one.
       } else {
         d.isSelected = false;
       }
-    });
+    }
 
     if (!this.multiple) {
       validValues = validValues[0];
@@ -1113,6 +1116,7 @@ export class VirtualSelect {
     let valueText = [];
     let valueTooltip = [];
     let selectedValues = this.selectedValues;
+    let selectedIndexes = this.selectedIndexes;
     let selectedLength = selectedValues.length;
     let noOfDisplayValues = this.noOfDisplayValues;
     let maximumValuesToShow = 50;
@@ -1127,14 +1131,23 @@ export class VirtualSelect {
           continue;
         }
 
-        if (selectedValuesCount > maximumValuesToShow) {
+        if (
+          selectedValuesCount > maximumValuesToShow ||
+          (!this.multiple && selectedValuesCount === 1)
+        ) {
           break;
         }
 
         let value = d.value;
+        let label = d.label;
+        let index = d.index;
 
-        if (selectedValues.indexOf(value) !== -1) {
-          let label = d.label;
+        if (
+          selectedValues.indexOf(value) !== -1 &&
+          selectedIndexes.indexOf(index) !== -1
+        ) {
+          if (selectedValuesCount >= selectedValues.length) break; // do not add same values multiple
+
           valueText.push(label);
           selectedValuesCount++;
 
@@ -1758,7 +1771,7 @@ export class VirtualSelect {
     let selectedValues = this.selectedValues;
     let selectedIndexes = this.selectedIndexes;
     let selectedValue = DomUtils.getData($ele, 'value');
-    let selectedIndex = DomUtils.getData($ele, 'index');
+    let selectedIndex = parseInt(DomUtils.getData($ele, 'index'));
 
     this.toggleSelectedProp(selectedIndex, isAdding);
 
@@ -1803,8 +1816,6 @@ export class VirtualSelect {
     }
 
     this.setValue(selectedValues, selectedIndexes, true);
-
-    console.log('aaaa');
   }
 
   selectFocusedOption() {
