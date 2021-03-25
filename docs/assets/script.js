@@ -116,7 +116,7 @@ function initPageGetStarted() {
     //keepAlwaysOpen: true,
     //  appendToBody: true,
     //options: getOptions(),
-    allowNoneOption: true,
+    allowNoneOption: false,
     selectedValue: 'Australia',
     //showSelectedOptionsFirst: true,
     placeholder: 'Select a single value',

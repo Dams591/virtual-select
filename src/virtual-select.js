@@ -1063,7 +1063,7 @@ export class VirtualSelect {
     this.$hiddenInput.value = newValue;
 
     // Index
-    if (!index) {
+    if (typeof index === 'undefined') {
       this.selectedIndexes = [];
     } else if (Array.isArray(index)) {
       this.selectedIndexes = [...index];
