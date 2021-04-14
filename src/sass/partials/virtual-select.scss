@@ -470,7 +470,8 @@ body.vscomp-popup-active {
   &.multiple {
     .vscomp-option {
       .vscomp-option-text {
-        width: calc(100% - #{$checkboxFullWidth});
+        //width: calc(100% - #{$checkboxFullWidth});
+        width: auto;
       }
 
       .vscomp-option-description {
