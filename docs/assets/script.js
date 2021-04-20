@@ -151,6 +151,8 @@ function initPageGetStarted() {
     placeholder: 'Select multiple values',
     selectedValue: ['Australia'],
     //selectedValue: [2, 3, 4, 5],
+    //search: true,
+    //disableSelectAll: true,
     zIndex: config.zIndex,
   });
 

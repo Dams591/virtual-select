@@ -302,9 +302,17 @@ body.vscomp-popup-active {
   border-bottom: 1px solid $borderColor;
 }
 
+.vs-comp-select-all-container {
+  display: flex;
+  align-items: center;
+  height: $searchHeight;
+  padding: 0px $paddingBase;
+  border-bottom: 1px solid $borderColor;
+}
+
 .vscomp-search-input {
   border: none;
-  width: calc(100% - 35px);
+  width: 100%;
   background: transparent;
   height: #{$searchHeight - 2px};
   padding: 10px 0;
@@ -445,15 +453,16 @@ body.vscomp-popup-active {
       display: flex;
       align-items: center;
       cursor: pointer;
+      width: 100%;
     }
 
-    .vscomp-search-input,
-    .vscomp-toggle-all-label {
-      width: calc(100% - #{$searchClearWidth + $checkboxFullWidth});
-    }
+    // .vscomp-search-input,
+    // .vscomp-toggle-all-label {
+    //   width: calc(100% - #{$searchClearWidth + $checkboxFullWidth});
+    // }
 
     .vscomp-toggle-all-label {
-      display: none;
+      //display: none;
     }
   }
 

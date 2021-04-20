@@ -350,22 +350,40 @@ export class VirtualSelect {
     let checkboxHtml = '';
     let searchInput = '';
 
-    if (this.multiple && !this.disableSelectAll) {
-      checkboxHtml = `<span class="vscomp-toggle-all-button">
-          <span class="checkbox-icon vscomp-toggle-all-checkbox"></span>
-          <span class="vscomp-toggle-all-label">${this.selectAllText}</span>
-        </span>`;
-    }
+    // if (this.multiple && !this.disableSelectAll) {
+    //   checkboxHtml = `<span class="vscomp-toggle-all-button">
+    //       <span class="checkbox-icon vscomp-toggle-all-checkbox"></span>
+    //       <span class="vscomp-toggle-all-label">${this.selectAllText}</span>
+    //     </span>`;
+    // }
+
+    // if (this.hasSearch) {
+    //   searchInput = `<input type="text" class="vscomp-search-input" placeholder="${this.searchPlaceholder}">
+    //   <span class="vscomp-search-clear">&times;</span>`;
+    // }
+
+    // let html = `<div class="vscomp-search-container">
+    //     ${checkboxHtml}
+    //     ${searchInput}
+    //   </div>`;
 
     if (this.hasSearch) {
-      searchInput = `<input type="text" class="vscomp-search-input" placeholder="${this.searchPlaceholder}">
-      <span class="vscomp-search-clear">&times;</span>`;
+      searchInput = ` <div class="vscomp-search-container">
+          <input type="text" class="vscomp-search-input" placeholder="${this.searchPlaceholder}">
+          <span class="vscomp-search-clear">&times;</span>
+        </div>`;
     }
 
-    let html = `<div class="vscomp-search-container">
-        ${checkboxHtml}
-        ${searchInput}
-      </div>`;
+    if (this.multiple && !this.disableSelectAll) {
+      checkboxHtml = `<div class="vs-comp-select-all-container">
+        <span class="vscomp-toggle-all-button">
+          <span class="checkbox-icon vscomp-toggle-all-checkbox"></span>
+          <span class="vscomp-toggle-all-label">${this.selectAllText}</span>
+        </span>
+        </div>`;
+    }
+
+    let html = `${searchInput}${checkboxHtml}`;
 
     this.$search.innerHTML = html;
     this.$searchInput = this.$dropboxEl.querySelector('.vscomp-search-input');
