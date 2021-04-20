@@ -455,15 +455,6 @@ body.vscomp-popup-active {
       cursor: pointer;
       width: 100%;
     }
-
-    // .vscomp-search-input,
-    // .vscomp-toggle-all-label {
-    //   width: calc(100% - #{$searchClearWidth + $checkboxFullWidth});
-    // }
-
-    .vscomp-toggle-all-label {
-      //display: none;
-    }
   }
 
   &:not(.has-search-input) {
@@ -479,7 +470,6 @@ body.vscomp-popup-active {
   &.multiple {
     .vscomp-option {
       .vscomp-option-text {
-        //width: calc(100% - #{$checkboxFullWidth});
         width: auto;
       }
 
