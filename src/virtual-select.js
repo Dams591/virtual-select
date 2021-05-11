@@ -1248,9 +1248,8 @@ export class VirtualSelect {
     let isOptionVisible = this.isOptionVisible;
 
     if (this.hasOptionGroup) {
-      visibleOptionGroupsMapping = this.getVisibleOptionGroupsMapping(
-        searchValue
-      );
+      visibleOptionGroupsMapping =
+        this.getVisibleOptionGroupsMapping(searchValue);
     }
 
     this.options.forEach((d) => {
@@ -1354,7 +1353,11 @@ export class VirtualSelect {
       let x = eleCoords.left + window.scrollX;
       let y = eleCoords.top + window.scrollY;
 
-      this.$dropboxEl.style.width = `${this.$ele.offsetWidth}px`; // TODO or custom dropdown width
+      this.$dropboxEl.style.width = `${
+        this.dropboxWidth
+          ? parseFloat(this.dropboxWidth)
+          : this.$ele.offsetWidth
+      }px`;
       this.$dropboxEl.style.left = `${x}px`;
 
       if (moreVisibleSides.vertical === 'top') {
