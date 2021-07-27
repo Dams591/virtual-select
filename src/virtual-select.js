@@ -419,7 +419,12 @@ export class VirtualSelect {
 
     this.addEvent(this.$options, 'click', 'onOptionsClick');
     this.addEvent(this.$options, 'mouseover', 'onOptionsMouseOver');
+    this.addEvent(this.$options, 'mouseleave', 'onOptionsMouseLeave');
     this.addEvent(this.$options, 'touchmove', 'onOptionsTouchMove');
+  }
+
+  onOptionsMouseLeave(){
+    this.removeOptionFocus();
   }
 
   addEvent($ele, events, method) {
