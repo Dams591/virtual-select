@@ -423,7 +423,7 @@ export class VirtualSelect {
     this.addEvent(this.$options, 'touchmove', 'onOptionsTouchMove');
   }
 
-  onOptionsMouseLeave(){
+  onOptionsMouseLeave() {
     this.removeOptionFocus();
   }
 
@@ -1649,8 +1649,8 @@ export class VirtualSelect {
       DomUtils.removeClass(this.$dropboxEl, 'closed');
       if (this.appendToBody) {
         // Hide dropbox somewhere farrrrrrr away
-        this.$dropboxEl.style.left = `-200px`;
-        this.$dropboxEl.style.top = `-200px`;
+        this.$dropboxEl.style.left = `-2000px`;
+        this.$dropboxEl.style.top = `-2000px`;
       }
     }, transitionDuration);
   }
