@@ -195,16 +195,9 @@ export class VirtualSelect {
       // Append to body (beta)
       // -----------------------
 
-      if (screenfull && screenfull.isFullscreen && screenfull.element) {
-        screenfull.element.append(
-          document.createRange().createContextualFragment(dropboxContainer)
-        );
-        //document.createRange().createContextualFragment(dropboxContainer).appendTo()
-      } else {
-        this.$body.append(
-          document.createRange().createContextualFragment(dropboxContainer)
-        );
-      }
+      this.$body.append(
+        document.createRange().createContextualFragment(dropboxContainer)
+      );
 
       this.$dropboxContainer = document.querySelector(
         `#vs-${this.guid}.vscomp-dropbox-container`
@@ -1360,6 +1353,13 @@ export class VirtualSelect {
 
     if (this.appendToBody) {
       // BETA
+
+      if (screenfull && screenfull.isFullscreen && screenfull.element) {
+        debugger;
+        let fragment = document.createDocumentFragment();
+        fragment.appendChild(this.$dropboxContainer);
+        screenfull.element.appendChild(fragment);
+      }
 
       let eleCoords = this.$ele.getBoundingClientRect();
       let x = eleCoords.left + window.scrollX;
