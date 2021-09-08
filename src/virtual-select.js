@@ -195,9 +195,16 @@ export class VirtualSelect {
       // Append to body (beta)
       // -----------------------
 
-      this.$body.append(
-        document.createRange().createContextualFragment(dropboxContainer)
-      );
+      if (screenfull && screenfull.isFullscreen && screenfull.element) {
+        screenfull.element.append(
+          document.createRange().createContextualFragment(dropboxContainer)
+        );
+        //document.createRange().createContextualFragment(dropboxContainer).appendTo()
+      } else {
+        this.$body.append(
+          document.createRange().createContextualFragment(dropboxContainer)
+        );
+      }
 
       this.$dropboxContainer = document.querySelector(
         `#vs-${this.guid}.vscomp-dropbox-container`
