@@ -1354,11 +1354,18 @@ export class VirtualSelect {
     if (this.appendToBody) {
       // BETA
 
-      if (screenfull && screenfull.isFullscreen && screenfull.element) {
-        debugger;
+      if (
+        typeof screenfull !== 'undefined' &&
+        screenfull.isFullscreen &&
+        screenfull.element
+      ) {
         let fragment = document.createDocumentFragment();
         fragment.appendChild(this.$dropboxContainer);
         screenfull.element.appendChild(fragment);
+      } else {
+        let fragment = document.createDocumentFragment();
+        fragment.appendChild(this.$dropboxContainer);
+        this.$body.appendChild(fragment);
       }
 
       let eleCoords = this.$ele.getBoundingClientRect();
@@ -1366,18 +1373,20 @@ export class VirtualSelect {
       let y = eleCoords.top + window.scrollY;
 
       this.$dropboxEl.style.width = `${
-        this.dropboxWidth
-          ? parseFloat(this.dropboxWidth)
-          : this.$ele.offsetWidth
+        this.dropboxWidth ? parseFloat(this.dropboxWidth) : eleCoords.width
       }px`;
       this.$dropboxEl.style.left = `${x}px`;
 
       if (moreVisibleSides.vertical === 'top') {
-        this.$dropboxEl.style.top = `${
-          y - this.$dropboxContainer.offsetHeight - 4
-        }px`;
+        let dropBoxCord = this.$dropboxContainer.getBoundingClientRect();
+
+        // this.$dropboxEl.style.top = `${
+        //   y - this.$dropboxContainer.offsetHeight - 4
+        // }px`;
+        this.$dropboxEl.style.top = `${y - dropBoxCord.height - 4}px`;
       } else {
-        this.$dropboxEl.style.top = `${y + this.$ele.offsetHeight + 4}px`;
+        //this.$dropboxEl.style.top = `${y + this.$ele.offsetHeight + 4}px`;
+        this.$dropboxEl.style.top = `${y + eleCoords.height + 4}px`;
       }
 
       DomUtils.toggleClass(
