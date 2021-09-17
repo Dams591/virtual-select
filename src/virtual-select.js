@@ -839,6 +839,7 @@ export class VirtualSelect {
     $ele.getDisplayValue = VirtualSelect.getDisplayValueMethod;
     $ele.open = VirtualSelect.openMethod;
     $ele.close = VirtualSelect.closeMethod;
+    $ele.setSearchValue = VirtualSelect.setSearchValueMethod;
   }
 
   setValueMethod(value, silentChange) {
@@ -2228,6 +2229,10 @@ export class VirtualSelect {
 
   static closeMethod() {
     return this.virtualSelect.closeDropbox();
+  }
+
+  static setSearchValueMethod(value) {
+    return this.virtualSelect.setSearchValue(value);
   }
 
   static onResizeMethod() {
