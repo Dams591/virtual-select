@@ -1,3 +1,5 @@
+import { Utils } from './index';
+
 export class DomUtils {
   static addClass($ele, className) {
     if (!$ele) {
@@ -6,8 +8,8 @@ export class DomUtils {
 
     className = className.split(' ');
 
-    this.getElements($ele).forEach((_this) => {
-      _this.classList.add(...className);
+    DomUtils.getElements($ele).forEach(($this) => {
+      $this.classList.add(...className);
     });
   }
 
@@ -18,8 +20,8 @@ export class DomUtils {
 
     className = className.split(' ');
 
-    this.getElements($ele).forEach((_this) => {
-      _this.classList.remove(...className);
+    DomUtils.getElements($ele).forEach(($this) => {
+      $this.classList.remove(...className);
     });
   }
 
@@ -34,8 +36,8 @@ export class DomUtils {
 
     let isAdded;
 
-    this.getElements($ele).forEach((_this) => {
-      isAdded = _this.classList.toggle(className, isAdd);
+    DomUtils.getElements($ele).forEach(($this) => {
+      isAdded = $this.classList.toggle(className, isAdd);
     });
 
     return isAdded;
@@ -55,27 +57,6 @@ export class DomUtils {
     }
 
     return $ele.scrollWidth > $ele.offsetWidth;
-  }
-
-  static getMoreVisibleSides($ele) {
-    if (!$ele) {
-      return {};
-    }
-
-    let box = $ele.getBoundingClientRect();
-    let availableWidth = window.innerWidth;
-    let availableHeight = window.innerHeight;
-    let leftArea = box.left;
-    let topArea = box.top;
-    let rightArea = availableWidth - leftArea - box.width;
-    let bottomArea = availableHeight - topArea - box.height;
-    let horizontal = leftArea > rightArea ? 'left' : 'right';
-    let vertical = topArea > bottomArea ? 'top' : 'bottom';
-
-    return {
-      horizontal,
-      vertical,
-    };
   }
 
   static getData($ele, name, type) {
@@ -106,6 +87,30 @@ export class DomUtils {
     $ele.dataset[name] = value;
   }
 
+  static setAttr($ele, name, value) {
+    if (!$ele) {
+      return;
+    }
+
+    $ele.setAttribute(name, value);
+  }
+
+  static setAttrFromEle($from, $to, attrList, valueLessProps) {
+    const values = {};
+
+    attrList.forEach((attr) => {
+      values[attr] = $from.getAttribute(attr);
+    });
+
+    attrList.forEach((attr) => {
+      let value = values[attr];
+
+      if (value || (valueLessProps.indexOf(attr) !== -1 && value === '')) {
+        $to.setAttribute(attr, value);
+      }
+    });
+  }
+
   static setStyle($ele, name, value) {
     if (!$ele) {
       return;
@@ -114,31 +119,57 @@ export class DomUtils {
     $ele.style[name] = value;
   }
 
+  static setStyles($ele, props) {
+    if (!$ele || !props) {
+      return;
+    }
+
+    Object.keys(props).forEach((name) => {
+      $ele.style[name] = props[name];
+    });
+  }
+
   static getElements($ele) {
     if (!$ele) {
       return;
     }
 
-    if ($ele.length === undefined) {
+    if ($ele.forEach === undefined) {
       $ele = [$ele];
     }
 
     return $ele;
   }
 
-  /** convert object to style attribute */
-  static getStyleText(props, skipAttrName) {
-    let result = '';
-
-    for (let k in props) {
-      result += `${k}: ${props[k]};`;
+  static addEvent($ele, events, callback) {
+    if (!$ele) {
+      return;
     }
 
-    if (result && !skipAttrName) {
-      result = `style="${result}"`;
+    events = Utils.removeArrayEmpty(events.split(' '));
+
+    events.forEach((event) => {
+      $ele = DomUtils.getElements($ele);
+
+      $ele.forEach(($this) => {
+        $this.addEventListener(event, callback);
+      });
+    });
+  }
+
+  static dispatchEvent($ele, eventName, bubbles = false) {
+    if (!$ele) {
+      return;
     }
 
-    return result;
+    $ele = DomUtils.getElements($ele);
+
+    /** using setTimeout to trigger asynchronous event */
+    setTimeout(() => {
+      $ele.forEach(($this) => {
+        $this.dispatchEvent(new CustomEvent(eventName, { bubbles }));
+      });
+    }, 0);
   }
 
   /** convert object to dom attributes */
@@ -158,5 +189,40 @@ export class DomUtils {
     }
 
     return html;
+  }
+
+  static getStyleText(props, skipAttrName) {
+    let result = '';
+
+    for (let k in props) {
+      result += `${k}: ${props[k]};`;
+    }
+
+    if (result && !skipAttrName) {
+      result = `style="${result}"`;
+    }
+
+    return result;
+  }
+
+  static getMoreVisibleSides($ele) {
+    if (!$ele) {
+      return {};
+    }
+
+    let box = $ele.getBoundingClientRect();
+    let availableWidth = window.innerWidth;
+    let availableHeight = window.innerHeight;
+    let leftArea = box.left;
+    let topArea = box.top;
+    let rightArea = availableWidth - leftArea - box.width;
+    let bottomArea = availableHeight - topArea - box.height;
+    let horizontal = leftArea > rightArea ? 'left' : 'right';
+    let vertical = topArea > bottomArea ? 'top' : 'bottom';
+
+    return {
+      horizontal,
+      vertical,
+    };
   }
 }

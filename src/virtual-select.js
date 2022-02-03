@@ -1623,7 +1623,6 @@ export class VirtualSelect {
     setTimeout(() => {
       DomUtils.addClass(this.$wrapper, 'opened');
       DomUtils.addClass(this.$dropboxEl, 'opened');
-      this.dispatchEvent(this.$ele, 'opened');
 
       if (!isSilent) {
         this.moveSelectedOptionsFirst();
@@ -1635,6 +1634,8 @@ export class VirtualSelect {
         } else {
           this.focusSearchInput();
         }
+
+        DomUtils.dispatchEvent(this.$ele, 'opened');
       }
     }, 0);
   }
@@ -1650,7 +1651,7 @@ export class VirtualSelect {
     setTimeout(() => {
       DomUtils.removeClass(this.$wrapper, 'opened focused');
       DomUtils.removeClass(this.$dropboxEl, 'opened focused');
-      this.dispatchEvent(this.$ele, 'closed');
+
       this.removeOptionFocus();
 
       if (!isSilent) {
@@ -1658,6 +1659,8 @@ export class VirtualSelect {
           DomUtils.removeClass(this.$body, 'vscomp-popup-active');
           this.isPopupActive = false;
         }
+
+        DomUtils.dispatchEvent(this.$ele, 'closed');
       }
     }, 0);
 

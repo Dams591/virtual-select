@@ -38,11 +38,7 @@ export class Utils {
   }
 
   static removeItemFromArray(array, value, cloneArray) {
-    if (
-      !Array.isArray(array) ||
-      !array.length ||
-      typeof value === 'undefined'
-    ) {
+    if (!Array.isArray(array) || !array.length) {
       return array;
     }
 
