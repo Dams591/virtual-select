@@ -1146,7 +1146,7 @@ export class VirtualSelect {
     let maximumValuesToShow = 50;
     let selectedValuesCount = 0;
 
-    if (this.isAllSelected) {
+    if (this.isAllSelected && selectedLength > 1) {
       //this.$valueText.innerHTML = `All (${selectedLength})`;
       this.$valueText.innerHTML = `${selectedLength} ${this.itemsSelectedMessage}`;
     } else {
