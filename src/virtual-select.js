@@ -1070,6 +1070,7 @@ export class VirtualSelect {
   }
 
   setValue(value, index, triggerEvent) {
+    debugger;
     // Value
     if (!value) {
       this.selectedValues = [];
@@ -1125,6 +1126,7 @@ export class VirtualSelect {
     );
 
     if (triggerEvent) {
+      debugger;
       this.dispatchEvent(this.$ele, 'change');
     }
 
@@ -1796,6 +1798,8 @@ export class VirtualSelect {
   }
 
   selectOption($ele) {
+    debugger;
+
     if (!$ele) {
       return;
     }

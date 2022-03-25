@@ -134,16 +134,16 @@ function initPageGetStarted() {
     //options: getOptions(),
     options: [
       {
-        value: 'Australia',
-        label: 'Ford Focus',
+        value: 'true',
+        label: 'true',
+      },
+      {
+        value: 'false',
+        label: 'false',
       },
       {
         value: 'Australia',
-        label: 'Porsche',
-      },
-      {
-        value: 'Australia',
-        label: 'Mercedes',
+        label: 'Australia',
       },
     ],
     // showSelectedOptionsFirst: true,

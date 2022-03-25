@@ -68,13 +68,13 @@ export class DomUtils {
 
     if (type === 'number') {
       value = parseFloat(value) || 0;
-    } else {
-      if (value === 'true') {
-        value = true;
-      } else if (value === 'false') {
-        value = false;
-      }
-    }
+    } //else {
+    //   if (value === 'true') {
+    //     value = true;
+    //   } else if (value === 'false') {
+    //     value = false;
+    //   }
+    //}
 
     return value;
   }
