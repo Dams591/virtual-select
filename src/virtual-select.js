@@ -1798,7 +1798,7 @@ export class VirtualSelect {
   }
 
   selectOption($ele) {
-    debugger;
+    //debugger;
 
     if (!$ele) {
       return;
@@ -1820,8 +1820,13 @@ export class VirtualSelect {
 
     let selectedValues = this.selectedValues;
     let selectedIndexes = this.selectedIndexes;
-    let selectedValue = DomUtils.getData($ele, 'value');
+    //let selectedValue = DomUtils.getData($ele, 'value');
+
     let selectedIndex = parseInt(DomUtils.getData($ele, 'index'));
+
+    //console.log(this.options[selectedIndex].value);
+
+    let selectedValue = this.options[selectedIndex].value;
 
     this.toggleSelectedProp(selectedIndex, isAdding);
 

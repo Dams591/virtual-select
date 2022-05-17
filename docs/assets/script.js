@@ -71,6 +71,12 @@ function getOptions(count, includeDesc) {
   }
 
   return optionsData;
+
+  return [
+    { label: 'Options 1', value: '"1"' },
+    { label: 'Options 2', value: '2' },
+    { label: 'Options 3', value: '3' },
+  ];
 }
 
 function getGroupOptions() {
@@ -100,7 +106,7 @@ function initPageGetStarted() {
     ele: '#single-select',
     options: [
       {
-        value: 'Australia',
+        value: '"Australia"',
         label: 'Ford Focus',
       },
       {
