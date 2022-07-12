@@ -307,9 +307,9 @@ export class VirtualSelect {
         d.visibleIndex
       }" ${styleText}>
           ${leftSection}
-          <span class="vscomp-option-text ${
-            d.value === noneOptionValue ? 'none' : ''
-          }" ${optionTooltip}>
+          <span title="${optionLabel}" class="vscomp-option-text ${
+        d.value === noneOptionValue ? 'none' : ''
+      }" ${optionTooltip}>
             ${optionLabel}
           </span>
           ${description}
