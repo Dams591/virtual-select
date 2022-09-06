@@ -23,6 +23,6 @@
     "webpack-cli": "^4.3.1"
   },
   "dependencies": {
-    "docsify": "^4.12.0"
+    "docsify": "^4.12.2"
   }
 }
