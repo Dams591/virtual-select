@@ -604,26 +604,26 @@ export class VirtualSelect {
   }
   /** dom event methods - end */
 
-    /** before event methods - start */
-    beforeValueSet(isReset) {
-      this.toggleAllOptionsClass(isReset ? false : undefined);
-    }
-  
-    beforeSelectNewValue() {
-      let newOption = this.getNewOption();
-      let newIndex = newOption.index;
-  
-      this.newValues.push(newOption.value);
-      this.setOptionProp(newIndex, 'isCurrentNew', false);
-      this.setOptionProp(newIndex, 'isNew', true);
-  
-      /** using setTimeout to fix the issue of dropbox getting closed on select */
-      setTimeout(() => {
-        this.setSearchValue('');
-        this.focusSearchInput();
-      }, 0);
-    }
-    /** before event methods - end */
+  /** before event methods - start */
+  beforeValueSet(isReset) {
+    this.toggleAllOptionsClass(isReset ? false : undefined);
+  }
+
+  beforeSelectNewValue() {
+    let newOption = this.getNewOption();
+    let newIndex = newOption.index;
+
+    this.newValues.push(newOption.value);
+    this.setOptionProp(newIndex, 'isCurrentNew', false);
+    this.setOptionProp(newIndex, 'isNew', true);
+
+    /** using setTimeout to fix the issue of dropbox getting closed on select */
+    setTimeout(() => {
+      this.setSearchValue('');
+      this.focusSearchInput();
+    }, 0);
+  }
+  /** before event methods - end */
 
   /** after event methods - start */
   afterRenderWrapper() {
@@ -637,7 +637,10 @@ export class VirtualSelect {
     this.addEvents();
     this.setMethods();
 
-    if (this.initialSelectedValue) {
+    if (
+      typeof this.initialSelectedValue !== 'undefined' ||
+      this.initialSelectedValue !== null
+    ) {
       this.setValueMethod(
         this.initialSelectedValue,
         this.silentInitialValueSet
@@ -1075,7 +1078,9 @@ export class VirtualSelect {
 
     /** merging new search option */
     if (this.allowNewOption && this.searchValue) {
-      let hasExactOption = newOptions.some((d) => d.label.toLowerCase() === this.searchValue);
+      let hasExactOption = newOptions.some(
+        (d) => d.label.toLowerCase() === this.searchValue
+      );
 
       if (!hasExactOption) {
         optionsUpdated = true;
@@ -1097,7 +1102,9 @@ export class VirtualSelect {
 
   setSelectedOptions() {
     let selectedValues = this.selectedValues;
-    this.selectedOptions = this.options.filter((d) => selectedValues.indexOf(d.value) !== -1);
+    this.selectedOptions = this.options.filter(
+      (d) => selectedValues.indexOf(d.value) !== -1
+    );
   }
 
   setSortedOptions() {
@@ -1238,7 +1245,6 @@ export class VirtualSelect {
     );
 
     if (triggerEvent) {
-      debugger;
       this.dispatchEvent(this.$ele, 'change');
     }
 
@@ -1280,7 +1286,8 @@ export class VirtualSelect {
         let label = d.label;
         let index = d.index;
 
-        if ( //a tester
+        if (
+          //a tester
           selectedValues.indexOf(value) !== -1 ||
           selectedIndexes.indexOf(index) !== -1
         ) {
@@ -1419,7 +1426,8 @@ export class VirtualSelect {
     let isOptionVisible = this.isOptionVisible.bind(this);
 
     if (this.hasOptionGroup) {
-      visibleOptionGroupsMapping = this.getVisibleOptionGroupsMapping(searchValue);
+      visibleOptionGroupsMapping =
+        this.getVisibleOptionGroupsMapping(searchValue);
     }
 
     this.options.forEach((d) => {
@@ -1436,7 +1444,12 @@ export class VirtualSelect {
           hasExactOption: false,
         };
       } else {
-        result = isOptionVisible(d, searchValue, hasExactOption, visibleOptionGroupsMapping);
+        result = isOptionVisible(
+          d,
+          searchValue,
+          hasExactOption,
+          visibleOptionGroupsMapping
+        );
       }
 
       if (result.isVisible) {
@@ -1989,8 +2002,6 @@ export class VirtualSelect {
   }
 
   selectOption($ele) {
-    //debugger;
-
     if (!$ele) {
       return;
     }
@@ -2111,9 +2122,9 @@ export class VirtualSelect {
       }
       var valuePassed = typeof isAllSelected === 'boolean';
 
-    if (!valuePassed) {
-      isAllSelected = this.isAllOptionsSelected();
-    }
+      if (!valuePassed) {
+        isAllSelected = this.isAllOptionsSelected();
+      }
     }
 
     DomUtils.toggleClass(this.$toggleAllCheckbox, 'checked', isAllSelected);

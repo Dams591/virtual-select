@@ -83,7 +83,6 @@ export class DomUtils {
     if (!$ele) {
       return;
     }
-    debugger;
     $ele.dataset[name] = value;
   }
 
