@@ -1,6 +1,8 @@
 export class Utils {
   static getString(text) {
-    return text || text === 0 ? text.toString() : '';
+    return typeof text !== 'undefined' || text !== null || text === 0
+      ? text.toString()
+      : '';
   }
 
   static convertToBoolean(value, defaultValue = false) {
