@@ -638,7 +638,7 @@ export class VirtualSelect {
     this.setMethods();
 
     if (
-      typeof this.initialSelectedValue !== 'undefined' ||
+      typeof this.initialSelectedValue !== 'undefined' &&
       this.initialSelectedValue !== null
     ) {
       this.setValueMethod(

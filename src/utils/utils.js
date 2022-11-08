@@ -1,6 +1,6 @@
 export class Utils {
   static getString(text) {
-    return typeof text !== 'undefined' || text !== null || text === 0
+    return (typeof text !== 'undefined' && text !== null) || text === 0
       ? text.toString()
       : '';
   }
