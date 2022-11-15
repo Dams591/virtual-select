@@ -554,6 +554,10 @@ body.vscomp-popup-active {
     .vs-comp-select-add-search-container {
       display: flex;
   
+      &.hidden {
+        display: none;
+      }
+
       .vscomp-toggle-add-search-label {
         display: inline-block;
       }

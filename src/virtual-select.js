@@ -407,6 +407,9 @@ export class VirtualSelect {
     this.$toggleAllCheckbox = this.$dropboxEl.querySelector(
       '.vscomp-toggle-all-checkbox'
     );
+    this.$toggleAddSeachContainer = this.$dropboxEl.querySelector(
+      '.vs-comp-select-add-search-container'
+    );
     this.$toggleAddSeachButton = this.$dropboxEl.querySelector(
       '.vscomp-toggle-add-search-button'
     );
@@ -2217,6 +2220,15 @@ export class VirtualSelect {
   }
 
   toggleAddSearchClass(isAllSelected) {
+    // First, if the search returns no item, we can hide this section
+    const visibleOptions = this.getVisibleOptions();
+
+    DomUtils.toggleClass(
+      this.$toggleAddSeachContainer,
+      'hidden',
+      !visibleOptions || !visibleOptions.length
+    );
+
     if (typeof isAllSelected !== 'boolean') {
       isAllSelected = false;
 
