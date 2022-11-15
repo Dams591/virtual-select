@@ -310,6 +310,14 @@ body.vscomp-popup-active {
   border-bottom: 1px solid $borderColor;
 }
 
+.vs-comp-select-add-search-container {
+  display: none;
+  align-items: center;
+  height: $searchHeight;
+  padding: 0px $paddingBase;
+  border-bottom: 1px solid $borderColor;
+}
+
 .vscomp-search-input {
   border: none;
   width: 100%;
@@ -542,11 +550,21 @@ body.vscomp-popup-active {
     .vscomp-search-clear {
       visibility: visible;
     }
-/*
-    .vscomp-toggle-all-button {
-      opacity: 0.5;
-      pointer-events: none;
-    }*/
+
+    .vs-comp-select-add-search-container {
+      display: flex;
+  
+      .vscomp-toggle-add-search-label {
+        display: inline-block;
+      }
+
+      .vscomp-toggle-add-search-button {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        width: 100%;
+      }
+    }           
   }
 
   &.keep-always-open {

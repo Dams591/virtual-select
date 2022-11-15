@@ -40,6 +40,7 @@ export class VirtualSelect {
    * @property {string} [noOptionsText=No options found] - Text to show when no options to show
    * @property {string} [noSearchResultsText=No results found] - Text to show when no results on search
    * @property {string} [selectAllText=Select all] - Text to show near select all checkbox when search is disabled
+   * @property {string} [addSearchToSelectionText=Add To Selection] - Text to show near select all checkbox when search is disabled
    * @property {array} [disabledOptions] - Options to disable (array of values)
    * @property {(string|array)} [selectedValue] - Single value or array of values to select on init
    * @property {boolean} [silentInitialValueSet=false] - To avoid "change event" trigger on setting initial value
@@ -63,7 +64,9 @@ export class VirtualSelect {
    * @property {boolean} [allowNoneOption=false] - In single selection mode only and when keep always open is on: display a none option that clears the selection
    * @property {string} [noneOptionText=None] - Text to be display if allowNone option is active
    * @property {boolean} [appendToBody=false] - When set to true and keepAlways open is off we are adding the dropbox element to the body
-   * * @property {boolean} [selectAllOnlyVisible=true] - Select only visible options on clicking select all checkbox when options filtered by search
+   * @property {boolean} [addSeachToSelection=false] - Add an option on search to add the results to current selection
+   * @property {function} [searchCallback=null] - Add an option to call a function when a search is happening
+   * @property {boolean} [selectAllOnlyVisible=true] - Select only visible options on clicking select all checkbox when options filtered by search
    */
   constructor(options) {
     try {
@@ -384,6 +387,15 @@ export class VirtualSelect {
         </div>`;
     }
 
+    if (this.hasSearch && this.multiple && this.addSeachToSelection) {
+      checkboxHtml += `<div class="vs-comp-select-add-search-container">
+        <span class="vscomp-toggle-add-search-button">
+          <span class="checkbox-icon vscomp-toggle-add-search-checkbox"></span>
+          <span class="vscomp-toggle-add-search-label">${this.addSearchToSelectionText}</span>
+        </span>
+        </div>`;
+    }
+
     let html = `${searchInput}${checkboxHtml}`;
 
     this.$search.innerHTML = html;
@@ -395,10 +407,17 @@ export class VirtualSelect {
     this.$toggleAllCheckbox = this.$dropboxEl.querySelector(
       '.vscomp-toggle-all-checkbox'
     );
+    this.$toggleAddSeachButton = this.$dropboxEl.querySelector(
+      '.vscomp-toggle-add-search-button'
+    );
+    this.$toggleAddSeachCheckbox = this.$dropboxEl.querySelector(
+      '.vscomp-toggle-add-search-checkbox'
+    );
 
     this.addEvent(this.$searchInput, 'keyup change', 'onSearch');
     this.addEvent(this.$searchClear, 'click', 'onSearchClear');
     this.addEvent(this.$toggleAllButton, 'click', 'onToggleAllOptions');
+    this.addEvent(this.$toggleAddSeachButton, 'click', 'onAddSeachToSelection');
   }
 
   /** render methods - end */
@@ -595,6 +614,49 @@ export class VirtualSelect {
     this.toggleAllOptions();
   }
 
+  onAddSeachToSelection() {
+    if (!this.multiple || !this.searchValue) {
+      return;
+    }
+
+    const isSelected = !DomUtils.hasClass(
+      this.$toggleAddSeachCheckbox,
+      'checked'
+    );
+
+    const selectedValues = this.selectedValues;
+    const filteredValues = this.options.filter((o) => {
+      if (o.isDisabled || o.isCurrentNew || o.isGroupTitle) {
+        return;
+      }
+
+      return o.isVisible;
+    });
+
+    if (isSelected) {
+      for (const opt of filteredValues) {
+        if (selectedValues.indexOf(opt.value) === -1) {
+          opt.isSelected = true;
+          selectedValues.push(opt.value);
+        }
+      }
+    } else {
+      for (const opt of filteredValues) {
+        const index = selectedValues.indexOf(opt.value);
+
+        if (index !== -1) {
+          opt.isSelected = false;
+          selectedValues.splice(index, 1);
+        }
+      }
+    }
+
+    this.toggleAddSearchClass(isSelected);
+    this.toggleAllOptionsClass(isSelected);
+    this.setValue(selectedValues, [], true);
+    this.renderOptions();
+  }
+
   onResize() {
     if (this.appendToBody) {
       if (this.isOpened()) {
@@ -671,6 +733,10 @@ export class VirtualSelect {
     if (this.selectAllOnlyVisible) {
       this.toggleAllOptionsClass();
     }
+
+    if (this.addSeachToSelection) {
+      this.toggleAddSearchClass();
+    }
   }
 
   afterSetVisibleOptionsCount() {
@@ -739,6 +805,7 @@ export class VirtualSelect {
     this.noOptionsText = options.noOptionsText;
     this.noSearchResultsText = options.noSearchResultsText;
     this.selectAllText = options.selectAllText;
+    this.addSearchToSelectionText = options.addSearchToSelectionText;
     this.placeholder = options.placeholder;
     this.position = options.position;
     this.dropboxWidth = options.dropboxWidth;
@@ -758,6 +825,8 @@ export class VirtualSelect {
     this.allowNoneOption = options.allowNoneOption;
     this.noneOptionText = options.noneOptionText;
     this.appendToBody = options.appendToBody;
+    this.addSeachToSelection = convertToBoolean(options.addSeachToSelection);
+    this.searchCallback = options.searchCallback || null;
 
     this.selectedValues = [];
     this.selectedIndexes = [];
@@ -832,6 +901,8 @@ export class VirtualSelect {
       noneOptionText: 'None',
       appendToBody: false,
       selectAllOnlyVisible: true,
+      addSeachToSelection: false,
+      addSearchToSelectionText: 'Add to selection',
     };
 
     if (options.hasOptionDescription) {
@@ -1093,6 +1164,10 @@ export class VirtualSelect {
 
       if (this.multiple) {
         this.toggleAllOptionsClass();
+      }
+
+      if (this.addSeachToSelection) {
+        this.toggleAddSearchClass();
       }
 
       this.setValueText();
@@ -1415,6 +1490,10 @@ export class VirtualSelect {
     this.setOptionsHeight();
     this.setVisibleOptions();
     this.afterSetSearchValue();
+
+    if (this.searchCallback) {
+      this.searchCallback(searchValue);
+    }
   }
 
   setVisibleOptionsCount() {
@@ -2107,6 +2186,7 @@ export class VirtualSelect {
     });
 
     this.toggleAllOptionsClass(isSelected);
+    this.toggleAddSearchClass(isSelected);
     this.setValue(selectedValues, selectedIndexes, true);
     this.renderOptions();
   }
@@ -2134,6 +2214,32 @@ export class VirtualSelect {
     } else {
       this.isAllSelected = isAllSelected;
     }
+  }
+
+  toggleAddSearchClass(isAllSelected) {
+    if (typeof isAllSelected !== 'boolean') {
+      isAllSelected = false;
+
+      if (this.options.length) {
+        isAllSelected = !this.options.some((d) => {
+          return (
+            d.isVisible && !d.isSelected && !d.isDisabled && !d.isGroupTitle
+          );
+        });
+      }
+
+      var valuePassed = typeof isAllSelected === 'boolean';
+
+      if (!valuePassed) {
+        isAllSelected = false;
+      }
+    }
+
+    DomUtils.toggleClass(
+      this.$toggleAddSeachCheckbox,
+      'checked',
+      isAllSelected
+    );
   }
 
   isAllOptionsSelected() {

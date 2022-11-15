@@ -156,6 +156,7 @@ function initPageGetStarted() {
     multiple: true,
     placeholder: 'Select multiple values',
     selectedValue: ['Australia'],
+    addSeachToSelection: true,
     //selectedValue: [2, 3, 4, 5],
     //search: true,
     //disableSelectAll: true,
