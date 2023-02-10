@@ -1293,9 +1293,15 @@ export class VirtualSelect {
       this.selectedIndexes = [index];
     }
 
-    let newIndex = this.multiple
-      ? this.selectedIndexes
-      : this.selectedIndexes[0] || '';
+    let newIndex = '';
+    if (this.multiple) {
+      newIndex = this.selectedIndexes;
+    } else if (
+      this.selectedIndexes[0] !== null &&
+      typeof this.selectedIndexes[0] !== 'undefined'
+    ) {
+      newIndex = this.selectedIndexes[0];
+    }
 
     this.$ele.index = newIndex;
     this.$hiddenInput.index = newIndex;
@@ -1366,7 +1372,7 @@ export class VirtualSelect {
 
         if (
           //a tester
-          selectedValues.indexOf(value) !== -1 ||
+          selectedValues.indexOf(value) !== -1 &&
           selectedIndexes.indexOf(index) !== -1
         ) {
           if (selectedValuesCount >= selectedValues.length) break; // do not add same values multiple
