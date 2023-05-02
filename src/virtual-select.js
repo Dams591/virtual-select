@@ -1372,7 +1372,7 @@ export class VirtualSelect {
 
         if (
           //a tester
-          selectedValues.indexOf(value) !== -1 &&
+          selectedValues.indexOf(value) !== -1 ||
           selectedIndexes.indexOf(index) !== -1
         ) {
           if (selectedValuesCount >= selectedValues.length) break; // do not add same values multiple
