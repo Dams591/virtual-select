@@ -2191,6 +2191,10 @@ export class VirtualSelect {
         d.isSelected = true;
 
         selectedValues.push(d.value);
+
+        if (!selectAllOnlyVisible || d.isVisible) {
+          selectedIndexes.push(idx);
+        }
       }
     });
 
