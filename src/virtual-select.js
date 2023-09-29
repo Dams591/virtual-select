@@ -997,14 +997,17 @@ export class VirtualSelect {
 
     let validValues = [];
     let validIndexes = [];
+    let validValuesSet = new Set([]);
+    let valueSet = new Set(value);
 
     for (let d of this.options) {
-      let isSelected = value.indexOf(d.value) !== -1;
+      let isSelected = valueSet.has(d.value);
 
       if (isSelected && !d.isDisabled && !d.isGroupTitle) {
-        if (validValues.indexOf(d.value) !== -1 && this.multiple) break; // If multiple selection with same value only select one.
+        if (validValuesSet.has(d.value) && this.multiple) break; // If multiple selection with same value only select one.
 
         d.isSelected = true;
+        validValuesSet.add(d.value);
         validValues.push(d.value);
         validIndexes.push(d.index);
         if (!this.multiple) break; // if single selection only select one.
