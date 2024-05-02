@@ -204,24 +204,49 @@ export class DomUtils {
     return result;
   }
 
-  static getMoreVisibleSides($ele) {
+  static getMoreVisibleSides($ele, context) {
     if (!$ele) {
       return {};
     }
+    if (context.appendTo !== null) {
+      const parentContainer = context.appendToParentContainer;
+      let box = $ele.getBoundingClientRect();
+      let availableWidth = context.appendTo.offsetWidth;
+      let availableHeight = context.appendTo.offsetHeight;
+      let leftArea =
+        $ele.offsetLeft + (parentContainer ? parentContainer.offsetLeft : 0);
+      let topArea =
+        $ele.offsetTop + (parentContainer ? parentContainer.offsetTop : 0);
+      let rightArea =
+        availableWidth -
+        $ele.offsetWidth -
+        context.$dropboxContainer.offsetWidth;
+      let bottomArea =
+        availableHeight -
+        $ele.offsetHeight -
+        context.$dropboxContainer.offsetHeight;
+      let horizontal = leftArea > rightArea ? 'left' : 'right';
+      let vertical = topArea > bottomArea ? 'top' : 'bottom';
 
-    let box = $ele.getBoundingClientRect();
-    let availableWidth = window.innerWidth;
-    let availableHeight = window.innerHeight;
-    let leftArea = box.left;
-    let topArea = box.top;
-    let rightArea = availableWidth - leftArea - box.width;
-    let bottomArea = availableHeight - topArea - box.height;
-    let horizontal = leftArea > rightArea ? 'left' : 'right';
-    let vertical = topArea > bottomArea ? 'top' : 'bottom';
+      return {
+        horizontal: horizontal,
+        vertical: vertical,
+      };
+    } else {
+      let box = $ele.getBoundingClientRect();
+      let availableWidth = window.innerWidth;
+      let availableHeight = window.innerHeight;
+      let leftArea = box.left;
+      let topArea = box.top;
+      let rightArea = availableWidth - leftArea - box.width;
+      let bottomArea = availableHeight - topArea - box.height;
+      let horizontal = leftArea > rightArea ? 'left' : 'right';
+      let vertical = topArea > bottomArea ? 'top' : 'bottom';
 
-    return {
-      horizontal,
-      vertical,
-    };
+      return {
+        horizontal,
+        vertical,
+      };
+    }
   }
 }

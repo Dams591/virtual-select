@@ -65,7 +65,9 @@ export class VirtualSelect {
    * @property {string} [searchPlaceholder=Search...] - Text to show inside search input
    * @property {boolean} [allowNoneOption=false] - In single selection mode only and when keep always open is on: display a none option that clears the selection
    * @property {string} [noneOptionText=None] - Text to be display if allowNone option is active
+   * @property {boolean} [appendTo=null] - When set and keepAlways open is off we are adding the dropbox element to the given element
    * @property {boolean} [appendToBody=false] - When set to true and keepAlways open is off we are adding the dropbox element to the body
+   * @property {boolean} [appendToParentContainer=null] - When using appendTo we need to know the parent container to calculate the position
    * @property {boolean} [addSeachToSelection=false] - Add an option on search to add the results to current selection
    * @property {function} [searchCallback=null] - Add an option to call a function when a search is happening
    * @property {boolean} [selectAllOnlyVisible=true] - Select only visible options on clicking select all checkbox when options filtered by search
@@ -144,6 +146,9 @@ export class VirtualSelect {
 
     this.guid = Utils.generateUUID();
 
+    this.customAppend =
+      !this.keepAlwaysOpen && (this.appendToBody || this.appendTo !== null);
+
     let dropboxContainer = `<div id="vs-${
       this.guid
     }" class="vscomp-dropbox-container" ${DomUtils.getStyleText(
@@ -182,12 +187,16 @@ export class VirtualSelect {
           </div>
         </div>
 
-        ${this.keepAlwaysOpen || !this.appendToBody ? dropboxContainer : ''}
+        ${!this.customAppend ? dropboxContainer : ''}
 
       </div>`;
 
     this.$ele.innerHTML = html;
     this.$body = document.querySelector('body');
+
+    if (this.appendTo) {
+      this.$body = this.appendTo;
+    }
 
     this.$wrapper = this.$ele.querySelector('.vscomp-wrapper');
     this.$toggleButton = this.$ele.querySelector('.vscomp-toggle-button');
@@ -196,7 +205,7 @@ export class VirtualSelect {
       '.vscomp-dropbox-close-button'
     );
 
-    if (!this.keepAlwaysOpen && this.appendToBody) {
+    if (this.customAppend) {
       // -----------------------
       // Append to body (beta)
       // -----------------------
@@ -338,7 +347,7 @@ export class VirtualSelect {
         hasNoSearchResults
       );
 
-      if (this.appendToBody)
+      if (this.appendToBody || this.appendTo !== null)
         DomUtils.toggleClass(
           this.$dropboxEl,
           'has-no-search-results',
@@ -496,7 +505,7 @@ export class VirtualSelect {
 
   onDocumentClick(e) {
     if (
-      this.appendToBody &&
+      (this.appendToBody || this.appendTo !== null) &&
       this.multiple &&
       this.isOpened() &&
       e.target.closest(`#vs-${this.guid}`)
@@ -667,7 +676,7 @@ export class VirtualSelect {
   }
 
   onResize() {
-    if (this.appendToBody) {
+    if (this.appendToBody || this.appendTo !== null) {
       if (this.isOpened()) {
         this.closeDropbox(true);
       }
@@ -839,7 +848,9 @@ export class VirtualSelect {
     this.itemsSelectedMessage = options.itemsSelectedMessage;
     this.allowNoneOption = options.allowNoneOption;
     this.noneOptionText = options.noneOptionText;
+    this.appendTo = options.appendTo;
     this.appendToBody = options.appendToBody;
+    this.appendToParentContainer = options.appendToParentContainer;
     this.addSeachToSelection = convertToBoolean(options.addSeachToSelection);
     this.searchCallback = options.searchCallback || null;
 
@@ -916,7 +927,9 @@ export class VirtualSelect {
       itemsSelectedMessage: 'selected',
       allowNoneOption: false,
       noneOptionText: 'None',
+      appendTo: null,
       appendToBody: false,
+      appendToParentContainer: null,
       selectAllOnlyVisible: true,
       addSeachToSelection: false,
       addSearchToSelectionText: 'Add to selection',
@@ -1478,7 +1491,7 @@ export class VirtualSelect {
     this.searchValueOriginal = value;
 
     DomUtils.toggleClass(this.$wrapper, 'has-search-value', value);
-    if (this.appendToBody)
+    if (this.appendToBody || this.appendTo !== null)
       DomUtils.toggleClass(this.$dropboxEl, 'has-search-value', value);
 
     if (this.hasServerSearch) {
@@ -1637,7 +1650,7 @@ export class VirtualSelect {
       return;
     }
 
-    let moreVisibleSides = DomUtils.getMoreVisibleSides(this.$wrapper);
+    let moreVisibleSides = DomUtils.getMoreVisibleSides(this.$wrapper, this);
     let showOnLeft = false;
 
     /** check that is dropbox hidden on right edge - only if custom width given */
@@ -1653,7 +1666,7 @@ export class VirtualSelect {
       }
     }
 
-    if (this.appendToBody) {
+    if (this.appendToBody || this.appendTo !== null) {
       // BETA
 
       if (
@@ -1670,25 +1683,61 @@ export class VirtualSelect {
         this.$body.appendChild(fragment);
       }
 
-      let eleCoords = this.$ele.getBoundingClientRect();
-      let x = eleCoords.left + window.scrollX;
-      let y = eleCoords.top + window.scrollY;
+      if (this.appendTo) {
+        const parentContainer = this.appendToParentContainer;
+        const scrollableParent = this.$ele.closest('.scrollable');
 
-      this.$dropboxEl.style.width = `${
-        this.dropboxWidth ? parseFloat(this.dropboxWidth) : eleCoords.width
-      }px`;
-      this.$dropboxEl.style.left = `${x}px`;
+        let eleCoords = {
+          height: this.$ele.offsetHeight,
+          left:
+            this.$ele.offsetLeft +
+            (parentContainer ? parentContainer.offsetLeft : 0),
+          top:
+            this.$ele.offsetTop +
+            (parentContainer ? parentContainer.offsetTop : 0),
+          width: this.$ele.offsetWidth,
+        };
 
-      if (moreVisibleSides.vertical === 'top') {
-        let dropBoxCord = this.$dropboxContainer.getBoundingClientRect();
+        let x = eleCoords.left - scrollableParent.scrollLeft;
+        let y = eleCoords.top - scrollableParent.scrollTop;
+        this.$dropboxEl.style.width = ''.concat(
+          this.dropboxWidth
+            ? parseFloat(this.dropboxWidth)
+            : eleCoords.width + 2,
+          'px'
+        );
+        this.$dropboxEl.style.left = ''.concat(x, 'px');
 
-        // this.$dropboxEl.style.top = `${
-        //   y - this.$dropboxContainer.offsetHeight - 4
-        // }px`;
-        this.$dropboxEl.style.top = `${y - dropBoxCord.height - 4}px`;
+        if (moreVisibleSides.vertical === 'top') {
+          this.$dropboxEl.style.top = ''.concat(
+            y - this.$dropboxContainer.offsetHeight - 4,
+            'px'
+          );
+        } else {
+          //this.$dropboxEl.style.top = `${y + this.$ele.offsetHeight + 4}px`;
+          this.$dropboxEl.style.top = ''.concat(y + eleCoords.height + 4, 'px');
+        }
       } else {
-        //this.$dropboxEl.style.top = `${y + this.$ele.offsetHeight + 4}px`;
-        this.$dropboxEl.style.top = `${y + eleCoords.height + 4}px`;
+        let eleCoords = this.$ele.getBoundingClientRect();
+        let x = eleCoords.left + window.scrollX;
+        let y = eleCoords.top + window.scrollY;
+
+        this.$dropboxEl.style.width = `${
+          this.dropboxWidth ? parseFloat(this.dropboxWidth) : eleCoords.width
+        }px`;
+        this.$dropboxEl.style.left = `${x}px`;
+
+        if (moreVisibleSides.vertical === 'top') {
+          let dropBoxCord = this.$dropboxContainer.getBoundingClientRect();
+
+          // this.$dropboxEl.style.top = `${
+          //   y - this.$dropboxContainer.offsetHeight - 4
+          // }px`;
+          this.$dropboxEl.style.top = `${y - dropBoxCord.height - 4}px`;
+        } else {
+          //this.$dropboxEl.style.top = `${y + this.$ele.offsetHeight + 4}px`;
+          this.$dropboxEl.style.top = `${y + eleCoords.height + 4}px`;
+        }
       }
 
       DomUtils.toggleClass(
@@ -1994,7 +2043,7 @@ export class VirtualSelect {
     setTimeout(() => {
       DomUtils.addClass(this.$wrapper, 'closed');
       DomUtils.removeClass(this.$dropboxEl, 'closed');
-      if (this.appendToBody) {
+      if (this.appendToBody || this.appendTo !== null) {
         // Hide dropbox somewhere farrrrrrr away
         this.$dropboxEl.style.left = `-2000px`;
         this.$dropboxEl.style.top = `-2000px`;
