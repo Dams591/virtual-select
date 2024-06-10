@@ -271,6 +271,10 @@ export class VirtualSelect {
       let rightSection = '';
       let description = '';
 
+      if (d.classNames) {
+        optionClasses += ` ${d.classNames}`;
+      }
+
       if (d.isFocused) {
         optionClasses += ' focused';
       }
@@ -1082,6 +1086,7 @@ export class VirtualSelect {
         //isVisible: true,
         isVisible: convertToBoolean(d.isVisible, true),
         isGroupTitle,
+        classNames: d.classNames,
       };
 
       if (hasDisabledOptions) {
