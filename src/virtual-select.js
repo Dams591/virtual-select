@@ -53,6 +53,7 @@ export class VirtualSelect {
    * @property {string} [tooltipAlignment=center] - CSS Text alignment for tooltip
    * @property {string} [tooltipMaxWidth=300px] - CSS max width for tooltip
    * @property {boolean} [showSelectedOptionsFirst=false] - Show selected options at the top of the dropbox
+   * @property {boolean} [putUnAvailableOptionsLast=false] - Put unavailable options at the end of the list (useful in slice mode)
    * @property {string} [name] - Name attribute for hidden input
    * @property {boolean} [keepAlwaysOpen] - Keep dropbox always open with fixed height
    * @property {number} [maxValues=0] - Maximum no.of options allowed to choose in multiple select
@@ -805,6 +806,9 @@ export class VirtualSelect {
     this.showSelectedOptionsFirst = convertToBoolean(
       options.showSelectedOptionsFirst
     );
+    this.putUnAvailableOptionsLast = convertToBoolean(
+      options.putUnAvailableOptionsLast
+    );
     this.disableSelectAll = convertToBoolean(options.disableSelectAll);
     this.keepAlwaysOpen = convertToBoolean(options.keepAlwaysOpen);
     this.showDropboxAsPopup = convertToBoolean(options.showDropboxAsPopup);
@@ -896,6 +900,7 @@ export class VirtualSelect {
       tooltipAlignment: 'center',
       tooltipMaxWidth: '300px',
       showSelectedOptionsFirst: false,
+      putUnAvailableOptionsLast: false,
       name: '',
       additionalClasses: '',
       keepAlwaysOpen: false,
@@ -950,6 +955,7 @@ export class VirtualSelect {
       'data-tooltip-alignment': 'tooltipAlignment',
       'data-tooltip-max-width': 'tooltipMaxWidth',
       'data-show-selected-options-first': 'showSelectedOptionsFirst',
+      'data-put-un-available-options-last': 'putUnAvailableOptionsLast',
       'data-disable-select-all': 'disableSelectAll',
       'data-keep-always-open': 'keepAlwaysOpen',
       'data-max-values': 'maxValues',
@@ -1203,6 +1209,18 @@ export class VirtualSelect {
       } else {
         sortedOptions = this.sortOptions(sortedOptions);
       }
+    }
+
+    if (this.putUnAvailableOptionsLast) {
+      sortedOptions = sortedOptions.sort((a, b) => {
+        if (a.classNames === undefined && b.classNames !== undefined) {
+          return -1;
+        } else if (a.classNames !== undefined && b.classNames === undefined) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
     }
 
     this.sortedOptions = sortedOptions;
@@ -2176,7 +2194,7 @@ export class VirtualSelect {
     );
   }
 
-  toggleAllOptions(isSelected) {
+  toggleAllOptions(isSelected, silentChange = false) {
     if (!this.multiple || this.disableSelectAll) {
       return;
     }
@@ -2209,7 +2227,7 @@ export class VirtualSelect {
 
     this.toggleAllOptionsClass(isSelected);
     this.toggleAddSearchClass(isSelected);
-    this.setValue(selectedValues, selectedIndexes, true);
+    this.setValue(selectedValues, selectedIndexes, !silentChange);
     this.renderOptions();
   }
 
@@ -2341,7 +2359,7 @@ export class VirtualSelect {
 
     if (keepValue) {
       if (this.isAllSelected) {
-        this.toggleAllOptions(this.isAllSelected); // If select all was on let select all on
+        this.toggleAllOptions(this.isAllSelected, silentChange); // If select all was on let select all on
       } else {
         this.setValueMethod(
           this.selectedValues,
