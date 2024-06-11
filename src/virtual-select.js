@@ -1031,10 +1031,10 @@ export class VirtualSelect {
     this.afterValueSet();
   }
 
-  setOptionsMethod(options, keepValue) {
+  setOptionsMethod(options, keepValue, silentChange) {
     let newoption = options != this.options;
     this.setOptions(options);
-    this.afterSetOptions(keepValue, newoption);
+    this.afterSetOptions(keepValue, silentChange);
   }
 
   setDisabledOptionsMethod(disabledOptions) {
@@ -2336,14 +2336,17 @@ export class VirtualSelect {
     this.renderOptions();
   }
 
-  afterSetOptions(keepValue) {
+  afterSetOptions(keepValue, silentChange = false) {
     let search = this.searchValue; // Need to be stored because setValueMethod will empty this.searchValue
 
     if (keepValue) {
       if (this.isAllSelected) {
         this.toggleAllOptions(this.isAllSelected); // If select all was on let select all on
       } else {
-        this.setValueMethod(this.selectedValues, this.silentInitialValueSet); // Reselect valid values
+        this.setValueMethod(
+          this.selectedValues,
+          silentChange || this.silentInitialValueSet
+        ); // Reselect valid values
       }
 
       if (this.search) this.setSearchValue(search, false, true);
@@ -2569,8 +2572,8 @@ export class VirtualSelect {
     this.virtualSelect.setValueMethod(value, silentChange);
   }
 
-  static setOptionsMethod(options, keepValue) {
-    this.virtualSelect.setOptionsMethod(options, keepValue);
+  static setOptionsMethod(options, keepValue, silentChange = false) {
+    this.virtualSelect.setOptionsMethod(options, keepValue, silentChange);
   }
 
   static setDisabledOptionsMethod(options) {
