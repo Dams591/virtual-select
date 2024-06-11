@@ -977,6 +977,7 @@ export class VirtualSelect {
     $ele.virtualSelect = this;
     $ele.value = this.multiple ? [] : '';
     $ele.reset = VirtualSelect.reset;
+    $ele.renderOptions = VirtualSelect.renderOptions;
     $ele.setValue = VirtualSelect.setValueMethod;
     $ele.setOptions = VirtualSelect.setOptionsMethod;
     $ele.setDisabledOptions = VirtualSelect.setDisabledOptionsMethod;
@@ -2558,6 +2559,10 @@ export class VirtualSelect {
 
   static reset() {
     this.virtualSelect.reset();
+  }
+
+  static renderOptions() {
+    this.virtualSelect.renderOptions();
   }
 
   static setValueMethod(value, silentChange) {
