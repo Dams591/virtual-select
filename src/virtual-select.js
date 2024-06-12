@@ -2127,7 +2127,10 @@ export class VirtualSelect {
       }
     } else {
       /** on selecting same value in single select */
-      if (!this.multiple) {
+      if (
+        !this.multiple ||
+        (this.slicerMode && this.selectedValues.length === 1)
+      ) {
         this.closeDropbox();
         return;
       }
