@@ -754,8 +754,10 @@ export class VirtualSelect {
     this.setVisibleOptions();
   }
 
-  afterValueSet() {
-    this.scrollToTop();
+  afterValueSet(doNotScrollToTop) {
+    if (!doNotScrollToTop) {
+      this.scrollToTop();
+    }
     this.setSearchValue('');
     this.renderOptions();
   }
@@ -1038,7 +1040,7 @@ export class VirtualSelect {
 
     this.beforeValueSet();
     this.setValue(validValues, validIndexes, !silentChange);
-    this.afterValueSet();
+    this.afterValueSet(silentChange && this.slicerMode);
   }
 
   setOptionsMethod(options, keepValue, silentChange) {
@@ -2365,8 +2367,10 @@ export class VirtualSelect {
     this.toggleAllOptionsClass(isReset ? false : undefined);
   }
 
-  afterValueSet() {
-    this.scrollToTop();
+  afterValueSet(doNotScrollToTop) {
+    if (!doNotScrollToTop) {
+      this.scrollToTop();
+    }
     this.setSearchValue('');
     this.renderOptions();
   }
