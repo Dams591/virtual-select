@@ -54,6 +54,7 @@ export class VirtualSelect {
    * @property {string} [tooltipMaxWidth=300px] - CSS max width for tooltip
    * @property {boolean} [showSelectedOptionsFirst=false] - Show selected options at the top of the dropbox
    * @property {boolean} [slicerMode=false] - Put unavailable options at the end of the list (useful in slice mode)
+   * @property {boolean} [selectAllOnSingleItemClick=false] - Name attribute for hidden input
    * @property {string} [name] - Name attribute for hidden input
    * @property {boolean} [keepAlwaysOpen] - Keep dropbox always open with fixed height
    * @property {number} [maxValues=0] - Maximum no.of options allowed to choose in multiple select
@@ -807,6 +808,9 @@ export class VirtualSelect {
       options.showSelectedOptionsFirst
     );
     this.slicerMode = convertToBoolean(options.slicerMode);
+    this.selectAllOnSingleItemClick = convertToBoolean(
+      options.selectAllOnSingleItemClick
+    );
     this.disableSelectAll = convertToBoolean(options.disableSelectAll);
     this.keepAlwaysOpen = convertToBoolean(options.keepAlwaysOpen);
     this.showDropboxAsPopup = convertToBoolean(options.showDropboxAsPopup);
@@ -899,6 +903,7 @@ export class VirtualSelect {
       tooltipMaxWidth: '300px',
       showSelectedOptionsFirst: false,
       slicerMode: false,
+      selectAllOnSingleItemClick: false,
       name: '',
       additionalClasses: '',
       keepAlwaysOpen: false,
@@ -954,6 +959,7 @@ export class VirtualSelect {
       'data-tooltip-max-width': 'tooltipMaxWidth',
       'data-show-selected-options-first': 'showSelectedOptionsFirst',
       'data-slicer-mode': 'slicerMode',
+      'data-select-all-on-single-item-click': 'selectAllOnSingleItemClick',
       'data-disable-select-all': 'disableSelectAll',
       'data-keep-always-open': 'keepAlwaysOpen',
       'data-max-values': 'maxValues',
@@ -2126,6 +2132,16 @@ export class VirtualSelect {
         return;
       }
     } else {
+      // On selection the same item select all
+      if (
+        this.slicerMode &&
+        this.selectAllOnSingleItemClick &&
+        this.selectedValues.length === 1
+      ) {
+        this.toggleAllOptions(true);
+        return;
+      }
+
       /** on selecting same value in single select */
       if (
         !this.multiple ||
