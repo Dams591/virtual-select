@@ -1400,6 +1400,10 @@ export class VirtualSelect {
       //this.$valueText.innerHTML = `All (${selectedLength})`;
       this.$valueText.innerHTML = `${selectedLength} ${this.itemsSelectedMessage}`;
     } else {
+      const matchingOptions = this.options.filter(
+        (d) => selectedValues.indexOf(d.value) !== -1
+      );
+
       for (let d of this.options) {
         if (d.isCurrentNew) {
           continue;
@@ -1416,11 +1420,16 @@ export class VirtualSelect {
         let label = d.label;
         let index = d.index;
 
-        if (
-          //a tester
+        let matchingCondition =
           selectedValues.indexOf(value) !== -1 ||
-          selectedIndexes.indexOf(index) !== -1
-        ) {
+          selectedIndexes.indexOf(index) !== -1;
+        if (matchingOptions && matchingOptions.length > 1) {
+          matchingCondition =
+            selectedValues.indexOf(value) !== -1 &&
+            selectedIndexes.indexOf(index) !== -1;
+        }
+
+        if (matchingCondition) {
           if (selectedValuesCount >= selectedValues.length) break; // do not add same values multiple
 
           valueText.push(label);
