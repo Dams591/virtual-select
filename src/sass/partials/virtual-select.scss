@@ -219,6 +219,7 @@ body.vscomp-popup-active {
   height: $optionHeight;
   align-items: center;
   cursor: pointer;
+  overflow: hidden;
 
   &.selected {
     background-color: $selectedColor;
