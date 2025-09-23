@@ -68,7 +68,8 @@ VirtualSelect.init({
 VirtualSelect.init({
   ...
   multiple: true,
-  search: false,
+  addSearchToSelection: true,
+  search: true,
 });
 ```
 
@@ -93,7 +94,7 @@ Option group could be added by adding nested options
 VirtualSelect.init({
   ...
   options: [
-    { 
+    {
       label: 'Option Group 1',
       options: [
         { label: 'Option 1-1', value: '1' },
@@ -232,7 +233,6 @@ VirtualSelect.init({
   maxValues: 4,
 });
 ```
-
 
 ## Label with description
 

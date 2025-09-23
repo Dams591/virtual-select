@@ -68,7 +68,7 @@ export class VirtualSelect {
    * @property {boolean} [appendTo=null] - When set and keepAlways open is off we are adding the dropbox element to the given element
    * @property {boolean} [appendToBody=false] - When set to true and keepAlways open is off we are adding the dropbox element to the body
    * @property {boolean} [appendToParentContainer=null] - When using appendTo we need to know the parent container to calculate the position
-   * @property {boolean} [addSeachToSelection=false] - Add an option on search to add the results to current selection
+   * @property {boolean} [addSearchToSelection=false] - Add an option on search to add the results to current selection
    * @property {function} [searchCallback=null] - Add an option to call a function when a search is happening
    * @property {boolean} [selectAllOnlyVisible=true] - Select only visible options on clicking select all checkbox when options filtered by search
    */
@@ -402,7 +402,7 @@ export class VirtualSelect {
         </div>`;
     }
 
-    if (this.hasSearch && this.multiple && this.addSeachToSelection) {
+    if (this.hasSearch && this.multiple && this.addSearchToSelection) {
       checkboxHtml += `<div class="vs-comp-select-add-search-container">
         <span class="vscomp-toggle-add-search-button">
           <span class="checkbox-icon vscomp-toggle-add-search-checkbox"></span>
@@ -428,14 +428,18 @@ export class VirtualSelect {
     this.$toggleAddSeachButton = this.$dropboxEl.querySelector(
       '.vscomp-toggle-add-search-button'
     );
-    this.$toggleAddSeachCheckbox = this.$dropboxEl.querySelector(
+    this.$toggleAddSearchCheckbox = this.$dropboxEl.querySelector(
       '.vscomp-toggle-add-search-checkbox'
     );
 
     this.addEvent(this.$searchInput, 'keyup change', 'onSearch');
     this.addEvent(this.$searchClear, 'click', 'onSearchClear');
     this.addEvent(this.$toggleAllButton, 'click', 'onToggleAllOptions');
-    this.addEvent(this.$toggleAddSeachButton, 'click', 'onAddSeachToSelection');
+    this.addEvent(
+      this.$toggleAddSeachButton,
+      'click',
+      'onaddSearchToSelection'
+    );
   }
 
   /** render methods - end */
@@ -632,13 +636,13 @@ export class VirtualSelect {
     this.toggleAllOptions();
   }
 
-  onAddSeachToSelection() {
+  onaddSearchToSelection() {
     if (!this.multiple || !this.searchValue) {
       return;
     }
 
     const isSelected = !DomUtils.hasClass(
-      this.$toggleAddSeachCheckbox,
+      this.$toggleAddSearchCheckbox,
       'checked'
     );
 
@@ -752,7 +756,7 @@ export class VirtualSelect {
       this.toggleAllOptionsClass();
     }
 
-    if (this.addSeachToSelection) {
+    if (this.addSearchToSelection) {
       this.toggleAddSearchClass();
     }
   }
@@ -851,7 +855,7 @@ export class VirtualSelect {
     this.appendTo = options.appendTo;
     this.appendToBody = options.appendToBody;
     this.appendToParentContainer = options.appendToParentContainer;
-    this.addSeachToSelection = convertToBoolean(options.addSeachToSelection);
+    this.addSearchToSelection = convertToBoolean(options.addSearchToSelection);
     this.searchCallback = options.searchCallback || null;
 
     this.selectedValues = [];
@@ -931,7 +935,7 @@ export class VirtualSelect {
       appendToBody: false,
       appendToParentContainer: null,
       selectAllOnlyVisible: true,
-      addSeachToSelection: false,
+      addSearchToSelection: false,
       addSearchToSelectionText: 'Add to selection',
     };
 
@@ -1203,7 +1207,7 @@ export class VirtualSelect {
         this.toggleAllOptionsClass();
       }
 
-      if (this.addSeachToSelection) {
+      if (this.addSearchToSelection) {
         this.toggleAddSearchClass();
       }
 
@@ -2362,7 +2366,7 @@ export class VirtualSelect {
     }
 
     DomUtils.toggleClass(
-      this.$toggleAddSeachCheckbox,
+      this.$toggleAddSearchCheckbox,
       'checked',
       isAllSelected
     );

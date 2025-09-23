@@ -106,15 +106,15 @@ function initPageGetStarted() {
     ele: '#single-select',
     options: [
       {
-        value: '"Australia"',
+        value: 'Ford Focus',
         label: 'Ford Focus',
       },
       {
-        value: 'Australia',
+        value: 'Porsche',
         label: 'Porsche',
       },
       {
-        value: 'Australia',
+        value: 'Mercedes',
         label: 'Mercedes',
       },
     ],
@@ -136,16 +136,16 @@ function initPageGetStarted() {
 
   VirtualSelect.init({
     ele: '#multiple-select',
-    keepAlwaysOpen: true,
+    keepAlwaysOpen: false,
     //options: getOptions(),
     options: [
       {
-        value: 'true',
-        label: 'true',
+        value: 'Ford Focus',
+        label: 'Ford Focus',
       },
       {
-        value: 'false',
-        label: 'false',
+        value: 'Porsche',
+        label: 'Porsche',
       },
       {
         value: 'Australia',
@@ -156,7 +156,7 @@ function initPageGetStarted() {
     multiple: true,
     placeholder: 'Select multiple values',
     selectedValue: ['Australia'],
-    addSeachToSelection: true,
+    addSearchToSelection: true,
     //selectedValue: [2, 3, 4, 5],
     //search: true,
     //disableSelectAll: true,
@@ -205,6 +205,8 @@ function initPageExamples() {
     ele: '#sample-multi-select',
     options: getOptions(),
     multiple: true,
+    search: true,
+    addSearchToSelection: true,
     zIndex: config.zIndex,
   });
 
