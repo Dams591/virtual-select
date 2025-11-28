@@ -1017,6 +1017,7 @@ export class VirtualSelect {
     $ele.getDisplayValue = VirtualSelect.getDisplayValueMethod;
     $ele.open = VirtualSelect.openMethod;
     $ele.close = VirtualSelect.closeMethod;
+    $ele.destroy = VirtualSelect.destroyMethod;
     $ele.setSearchValue = VirtualSelect.setSearchValueMethod;
   }
 
@@ -2496,6 +2497,113 @@ export class VirtualSelect {
     }
   }
 
+  destroy() {
+    // Remove appended dropbox container if it exists
+    if (this.customAppend && this.$dropboxContainer) {
+      if (this.$dropboxContainer.parentElement) {
+        this.$dropboxContainer.parentElement.removeChild(
+          this.$dropboxContainer
+        );
+      }
+    }
+
+    // Remove event listeners
+    this.removeEvents();
+
+    // Clear the wrapper innerHTML
+    if (this.$ele) {
+      this.$ele.innerHTML = '';
+      delete this.$ele.virtualSelect;
+      delete this.$ele.value;
+      delete this.$ele.reset;
+      delete this.$ele.renderOptions;
+      delete this.$ele.setValue;
+      delete this.$ele.setOptions;
+      delete this.$ele.setDisabledOptions;
+      delete this.$ele.toggleSelectAll;
+      delete this.$ele.isAllSelected;
+      delete this.$ele.addOption;
+      delete this.$ele.getNewValue;
+      delete this.$ele.getDisplayValue;
+      delete this.$ele.open;
+      delete this.$ele.close;
+      delete this.$ele.destroy;
+      delete this.$ele.setSearchValue;
+    }
+
+    // Clear all references
+    this.events = {};
+    this.options = [];
+    this.selectedValues = [];
+    this.selectedIndexes = [];
+  }
+
+  removeEvents() {
+    this.removeEvent(document, 'click', 'onDocumentClick');
+    this.removeEvent(this.$wrapper, 'keydown', 'onKeyDown');
+    this.removeEvent(this.$toggleButton, 'click', 'onToggleButtonClick');
+    this.removeEvent(this.$clearButton, 'click', 'onClearButtonClick');
+    this.removeEvent(
+      this.$dropboxContainer,
+      'click',
+      'onDropboxContainerClick'
+    );
+    this.removeEvent(
+      this.$dropboxCloseButton,
+      'click',
+      'onDropboxCloseButtonClick'
+    );
+    this.removeEvent(this.$optionsContainer, 'scroll', 'onOptionsScroll');
+    this.removeEvent(this.$options, 'click', 'onOptionsClick');
+    this.removeEvent(this.$options, 'mouseover', 'onOptionsMouseOver');
+    this.removeEvent(
+      this.$dropboxContainer,
+      'mouseleave',
+      'onOptionsMouseLeave'
+    );
+    this.removeEvent(this.$options, 'touchmove', 'onOptionsTouchMove');
+
+    if (this.$searchInput) {
+      this.removeEvent(this.$searchInput, 'keyup change', 'onSearch');
+    }
+    if (this.$searchClear) {
+      this.removeEvent(this.$searchClear, 'click', 'onSearchClear');
+    }
+    if (this.$toggleAllButton) {
+      this.removeEvent(this.$toggleAllButton, 'click', 'onToggleAllOptions');
+    }
+    if (this.$toggleAddSeachButton) {
+      this.removeEvent(
+        this.$toggleAddSeachButton,
+        'click',
+        'onaddSearchToSelection'
+      );
+    }
+  }
+
+  removeEvent($ele, events, method) {
+    if (!$ele) {
+      return;
+    }
+
+    events = Utils.removeArrayEmpty(events.split(' '));
+
+    events.forEach((event) => {
+      let eventsKey = `${method}-${event}`;
+      let callback = this.events[eventsKey];
+
+      if (callback) {
+        $ele = DomUtils.getElements($ele);
+
+        $ele.forEach((_this) => {
+          _this.removeEventListener(event, callback);
+        });
+
+        delete this.events[eventsKey];
+      }
+    });
+  }
+
   beforeSelectNewValue() {
     let newOption = this.getNewOption();
     let newIndex = newOption.index;
@@ -2642,6 +2750,11 @@ export class VirtualSelect {
 
     let instances = [];
     $eleArray.forEach(($ele) => {
+      // Destroy existing instance before creating a new one
+      if ($ele.virtualSelect) {
+        $ele.virtualSelect.destroy();
+      }
+
       options.ele = $ele;
       instances.push(new VirtualSelect(options));
     });
@@ -2714,6 +2827,10 @@ export class VirtualSelect {
 
   static closeMethod() {
     return this.virtualSelect.closeDropbox();
+  }
+
+  static destroyMethod() {
+    this.virtualSelect.destroy();
   }
 
   static setSearchValueMethod(value) {
